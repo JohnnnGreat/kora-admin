@@ -1,0 +1,11 @@
+services:
+  # CI supplies immutable image tags. This overlay replaces the local Docker
+  # build definitions in docker-compose.yml while retaining its hardening,
+  # environment, and networking settings.
+  admin-api:
+    build: !reset null
+    image: ${ADMIN_API_IMAGE:?ADMIN_API_IMAGE must be set}
+
+  admin-api-migrate:
+    build: !reset null
+    image: ${ADMIN_API_MIGRATE_IMAGE:?ADMIN_API_MIGRATE_IMAGE must be set}

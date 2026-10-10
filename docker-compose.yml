@@ -1,0 +1,41 @@
+services:
+  admin-api:
+    build:
+      context: .
+      target: runtime
+    image: kora-admin-api:latest
+    container_name: kora-admin-api
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: ${DOCKER_DATABASE_URL}
+    ports:
+      - "127.0.0.1:3006:3006"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  admin-api-migrate:
+    build:
+      context: .
+      target: migrate
+    image: kora-admin-api-migrate:latest
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: ${DOCKER_DATABASE_URL}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    profiles:
+      - tools
+    restart: "no"
+    security_opt:
+      - no-new-privileges:true

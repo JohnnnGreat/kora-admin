@@ -1,0 +1,143 @@
+name: Admin backend CI/CD
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**/*.md'
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+  workflow_dispatch:
+
+concurrency:
+  group: admin-backend-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '22'
+  PNPM_VERSION: '10.33.0'
+  IMAGE_NAME: ghcr.io/${{ github.repository }}
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm lint:ci
+      - run: pnpm test
+      - run: DATABASE_URL=postgresql://ci:ci@127.0.0.1:5432/ci pnpm prisma:generate
+      - run: pnpm build
+      - run: docker build --target runtime --tag admin-backend:ci .
+
+  publish:
+    name: Publish images
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      runtime_image: ${{ steps.images.outputs.runtime_image }}
+      migrate_image: ${{ steps.images.outputs.migrate_image }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - id: images
+        name: Define immutable image tags
+        run: |
+          echo "runtime_image=${IMAGE_NAME}:sha-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+          echo "migrate_image=${IMAGE_NAME}:migrate-sha-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and publish API image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: runtime
+          push: true
+          tags: |
+            ${{ steps.images.outputs.runtime_image }}
+            ${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and publish migration image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: migrate
+          push: true
+          tags: ${{ steps.images.outputs.migrate_image }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy production
+    needs: publish
+    # This explicit opt-in keeps main-branch image publishing safe before the
+    # VPS credentials and GitHub Environment are configured.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+    env:
+      DEPLOY_PATH: ${{ vars.DEPLOY_PATH || '/opt/emrc-admin-backend' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure SSH host verification
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' '${{ secrets.DEPLOY_KNOWN_HOSTS }}' > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+          printf '%s\n' '${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}' > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Upload the CI deployment overlay
+        run: scp -i ~/.ssh/id_ed25519 docker-compose.deploy.yml "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${DEPLOY_PATH}/docker-compose.deploy.yml"
+
+      - name: Authenticate the VPS to GHCR
+        env:
+          GHCR_PULL_TOKEN: ${{ secrets.GHCR_PULL_TOKEN }}
+        run: |
+          printf '%s' "$GHCR_PULL_TOKEN" | ssh -i ~/.ssh/id_ed25519 "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" "docker login ghcr.io --username '${{ github.repository_owner }}' --password-stdin"
+
+      - name: Apply migrations and update the API
+        run: |
+          ssh -i ~/.ssh/id_ed25519 "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" \
+            "cd '${DEPLOY_PATH}' && \
+             ADMIN_API_IMAGE='${{ needs.publish.outputs.runtime_image }}' \
+             ADMIN_API_MIGRATE_IMAGE='${{ needs.publish.outputs.migrate_image }}' \
+             docker compose -f docker-compose.yml -f docker-compose.vps.yml -f docker-compose.deploy.yml pull && \
+             ADMIN_API_IMAGE='${{ needs.publish.outputs.runtime_image }}' \
+             ADMIN_API_MIGRATE_IMAGE='${{ needs.publish.outputs.migrate_image }}' \
+             docker compose -f docker-compose.yml -f docker-compose.vps.yml -f docker-compose.deploy.yml --profile tools run --rm admin-api-migrate && \
+             ADMIN_API_IMAGE='${{ needs.publish.outputs.runtime_image }}' \
+             ADMIN_API_MIGRATE_IMAGE='${{ needs.publish.outputs.migrate_image }}' \
+             docker compose -f docker-compose.yml -f docker-compose.vps.yml -f docker-compose.deploy.yml up -d --remove-orphans admin-api && \
+             curl --fail --retry 10 --retry-delay 3 http://127.0.0.1:3006/api/health/live"

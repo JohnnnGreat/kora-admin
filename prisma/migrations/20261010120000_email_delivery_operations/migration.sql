@@ -1,0 +1,15 @@
+ALTER TYPE "PlatformEmailCampaignStatus" ADD VALUE IF NOT EXISTS 'scheduled';
+ALTER TYPE "PlatformEmailCampaignStatus" ADD VALUE IF NOT EXISTS 'queued';
+ALTER TYPE "PlatformEmailCampaignStatus" ADD VALUE IF NOT EXISTS 'cancelled';
+ALTER TYPE "PlatformEmailDeliveryStatus" ADD VALUE IF NOT EXISTS 'processing';
+ALTER TYPE "PlatformEmailDeliveryStatus" ADD VALUE IF NOT EXISTS 'delivered';
+ALTER TYPE "PlatformEmailDeliveryStatus" ADD VALUE IF NOT EXISTS 'opened';
+ALTER TYPE "PlatformEmailDeliveryStatus" ADD VALUE IF NOT EXISTS 'bounced';
+ALTER TYPE "PlatformEmailDeliveryStatus" ADD VALUE IF NOT EXISTS 'complained';
+ALTER TABLE "platform_email_campaigns" ADD COLUMN IF NOT EXISTS "scheduledAt" TIMESTAMP(3), ADD COLUMN IF NOT EXISTS "cancelledAt" TIMESTAMP(3);
+ALTER TABLE "platform_email_deliveries" ADD COLUMN IF NOT EXISTS "attempts" INTEGER NOT NULL DEFAULT 0, ADD COLUMN IF NOT EXISTS "nextAttemptAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP, ADD COLUMN IF NOT EXISTS "leaseUntil" TIMESTAMP(3), ADD COLUMN IF NOT EXISTS "deliveredAt" TIMESTAMP(3), ADD COLUMN IF NOT EXISTS "openedAt" TIMESTAMP(3), ADD COLUMN IF NOT EXISTS "bouncedAt" TIMESTAMP(3), ADD COLUMN IF NOT EXISTS "complainedAt" TIMESTAMP(3);
+CREATE INDEX IF NOT EXISTS "platform_email_deliveries_status_nextAttemptAt_idx" ON "platform_email_deliveries"("status", "nextAttemptAt");
+CREATE TABLE IF NOT EXISTS "platform_email_suppressions" ("id" TEXT NOT NULL, "email" TEXT NOT NULL, "reason" TEXT NOT NULL, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP(3) NOT NULL, CONSTRAINT "platform_email_suppressions_pkey" PRIMARY KEY ("id"));
+CREATE UNIQUE INDEX IF NOT EXISTS "platform_email_suppressions_email_key" ON "platform_email_suppressions"("email");
+CREATE TABLE IF NOT EXISTS "platform_email_templates" ("id" TEXT NOT NULL, "name" TEXT NOT NULL, "subject" TEXT NOT NULL, "preheader" TEXT, "content" JSONB NOT NULL, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP(3) NOT NULL, CONSTRAINT "platform_email_templates_pkey" PRIMARY KEY ("id"));
+CREATE UNIQUE INDEX IF NOT EXISTS "platform_email_templates_name_key" ON "platform_email_templates"("name");

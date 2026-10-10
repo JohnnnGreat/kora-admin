@@ -1,0 +1,220 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PlatformAdminStatus {
+  active
+  disabled
+}
+
+enum PlatformMfaKind {
+  totp
+}
+
+enum PlatformAuditOutcome {
+  success
+  failure
+}
+
+enum PlatformEmailCampaignStatus {
+  draft
+  scheduled
+  queued
+  sending
+  paused
+  sent
+  failed
+  cancelled
+}
+
+enum PlatformEmailDeliveryStatus {
+  pending
+  processing
+  sent
+  delivered
+  opened
+  bounced
+  complained
+  failed
+  skipped
+}
+
+model PlatformAdmin {
+  id             String              @id @default(uuid())
+  email          String              @unique
+  name           String
+  passwordHash   String
+  status         PlatformAdminStatus @default(active)
+  lastLoginAt    DateTime?
+  passwordSetAt  DateTime            @default(now())
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  roles       PlatformAdminRole[]
+  sessions    PlatformSession[]
+  mfaMethods  PlatformMfaMethod[]
+  auditEvents PlatformAuditEvent[]
+  emailCampaigns PlatformEmailCampaign[]
+
+  @@map("platform_admins")
+}
+
+model PlatformRole {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  name        String
+  description String   @default("")
+  permissions String[] @default([])
+  isSystem    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  admins PlatformAdminRole[]
+
+  @@map("platform_roles")
+}
+
+model PlatformAdminRole {
+  adminId  String
+  roleId   String
+  assignedAt DateTime @default(now())
+
+  admin PlatformAdmin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  role  PlatformRole  @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([adminId, roleId])
+  @@index([roleId])
+  @@map("platform_admin_roles")
+}
+
+model PlatformSession {
+  id           String   @id @default(uuid())
+  adminId      String
+  tokenHash    String   @unique
+  mfaVerified  Boolean  @default(false)
+  ipAddress    String?
+  userAgent    String?
+  lastSeenAt   DateTime @default(now())
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  createdAt    DateTime @default(now())
+
+  admin PlatformAdmin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@index([adminId, revokedAt, expiresAt])
+  @@map("platform_sessions")
+}
+
+model PlatformMfaMethod {
+  id              String          @id @default(uuid())
+  adminId         String
+  kind            PlatformMfaKind @default(totp)
+  secretEncrypted String
+  verifiedAt      DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  admin PlatformAdmin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  @@unique([adminId, kind])
+  @@map("platform_mfa_methods")
+}
+
+model PlatformAuditEvent {
+  id         String               @id @default(uuid())
+  actorId    String?
+  action     String
+  outcome    PlatformAuditOutcome @default(success)
+  targetType String?
+  targetId   String?
+  ipAddress  String?
+  userAgent  String?
+  metadata   Json                 @default("{}")
+  createdAt  DateTime             @default(now())
+
+  actor PlatformAdmin? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId, createdAt])
+  @@index([action, createdAt])
+  @@index([targetType, targetId, createdAt])
+  @@map("platform_audit_events")
+}
+
+model PlatformEmailCampaign {
+  id             String                      @id @default(uuid())
+  createdById    String
+  subject        String
+  preheader      String?                     @db.Text
+  content        Json
+  audience       Json
+  status         PlatformEmailCampaignStatus @default(draft)
+  recipientCount Int                         @default(0)
+  sentCount      Int                         @default(0)
+  failedCount    Int                         @default(0)
+  createdAt      DateTime                    @default(now())
+  updatedAt      DateTime                    @updatedAt
+  sentAt         DateTime?
+  scheduledAt    DateTime?
+  cancelledAt    DateTime?
+
+  createdBy PlatformAdmin          @relation(fields: [createdById], references: [id], onDelete: Restrict)
+  deliveries PlatformEmailDelivery[]
+
+  @@index([createdById, createdAt])
+  @@index([status, createdAt])
+  @@map("platform_email_campaigns")
+}
+
+model PlatformEmailDelivery {
+  id           String                      @id @default(uuid())
+  campaignId   String
+  recipientEmail String
+  recipientName  String?
+  recipientUserId String?
+  status       PlatformEmailDeliveryStatus @default(pending)
+  providerId   String?
+  error        String?                     @db.Text
+  sentAt       DateTime?
+  attempts     Int                         @default(0)
+  nextAttemptAt DateTime?                  @default(now())
+  leaseUntil   DateTime?
+  deliveredAt  DateTime?
+  openedAt     DateTime?
+  bouncedAt    DateTime?
+  complainedAt DateTime?
+  createdAt    DateTime                    @default(now())
+
+  campaign PlatformEmailCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, recipientEmail])
+  @@index([campaignId, status])
+  @@map("platform_email_deliveries")
+}
+
+model PlatformEmailSuppression {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  reason    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("platform_email_suppressions")
+}
+
+model PlatformEmailTemplate {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  subject   String
+  preheader String?  @db.Text
+  content   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("platform_email_templates")
+}

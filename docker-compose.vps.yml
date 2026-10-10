@@ -1,0 +1,13 @@
+services:
+  admin-api:
+    network_mode: host
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    ports: !reset []
+    extra_hosts: !reset []
+
+  admin-api-migrate:
+    network_mode: host
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    extra_hosts: !reset []
