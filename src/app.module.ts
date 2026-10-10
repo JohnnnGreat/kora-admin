@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuditModule } from './audit/audit.module';
+import { BillingModeModule } from './billing-mode/billing-mode.module';
 import { validateEnvironment } from './config/environment';
 import { DatabaseModule } from './database/database.module';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -24,6 +25,7 @@ import { PlatformAuthModule } from './platform-auth/platform-auth.module';
     PlatformAuthModule,
     HealthModule,
     OrganizationsModule,
+    BillingModeModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

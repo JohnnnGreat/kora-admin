@@ -52,6 +52,9 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   PlatformAdmin: 'PlatformAdmin',
+  PlatformOrganizationBillingMode: 'PlatformOrganizationBillingMode',
+  PlatformManagedBilling: 'PlatformManagedBilling',
+  PlatformBillingSettings: 'PlatformBillingSettings',
   PlatformRole: 'PlatformRole',
   PlatformAdminRole: 'PlatformAdminRole',
   PlatformSession: 'PlatformSession',
@@ -92,6 +95,45 @@ export const PlatformAdminScalarFieldEnum = {
 } as const
 
 export type PlatformAdminScalarFieldEnum = (typeof PlatformAdminScalarFieldEnum)[keyof typeof PlatformAdminScalarFieldEnum]
+
+
+export const PlatformOrganizationBillingModeScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  mode: 'mode',
+  note: 'note',
+  setById: 'setById',
+  setAt: 'setAt'
+} as const
+
+export type PlatformOrganizationBillingModeScalarFieldEnum = (typeof PlatformOrganizationBillingModeScalarFieldEnum)[keyof typeof PlatformOrganizationBillingModeScalarFieldEnum]
+
+
+export const PlatformManagedBillingScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  planName: 'planName',
+  amountMinor: 'amountMinor',
+  currency: 'currency',
+  interval: 'interval',
+  status: 'status',
+  notes: 'notes',
+  updatedById: 'updatedById',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PlatformManagedBillingScalarFieldEnum = (typeof PlatformManagedBillingScalarFieldEnum)[keyof typeof PlatformManagedBillingScalarFieldEnum]
+
+
+export const PlatformBillingSettingsScalarFieldEnum = {
+  id: 'id',
+  defaultMode: 'defaultMode',
+  updatedById: 'updatedById',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlatformBillingSettingsScalarFieldEnum = (typeof PlatformBillingSettingsScalarFieldEnum)[keyof typeof PlatformBillingSettingsScalarFieldEnum]
 
 
 export const PlatformRoleScalarFieldEnum = {

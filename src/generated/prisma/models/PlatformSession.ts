@@ -469,10 +469,6 @@ export type PlatformSessionUncheckedUpdateManyWithoutAdminNestedInput = {
   deleteMany?: Prisma.PlatformSessionScalarWhereInput | Prisma.PlatformSessionScalarWhereInput[]
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type PlatformSessionCreateWithoutAdminInput = {
   id?: string
   tokenHash: string

@@ -9,6 +9,9 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/PlatformAdmin.js'
+export type * from './models/PlatformOrganizationBillingMode.js'
+export type * from './models/PlatformManagedBilling.js'
+export type * from './models/PlatformBillingSettings.js'
 export type * from './models/PlatformRole.js'
 export type * from './models/PlatformAdminRole.js'
 export type * from './models/PlatformSession.js'

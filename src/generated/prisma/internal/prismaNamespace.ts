@@ -385,6 +385,9 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   PlatformAdmin: 'PlatformAdmin',
+  PlatformOrganizationBillingMode: 'PlatformOrganizationBillingMode',
+  PlatformManagedBilling: 'PlatformManagedBilling',
+  PlatformBillingSettings: 'PlatformBillingSettings',
   PlatformRole: 'PlatformRole',
   PlatformAdminRole: 'PlatformAdminRole',
   PlatformSession: 'PlatformSession',
@@ -409,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "platformAdmin" | "platformRole" | "platformAdminRole" | "platformSession" | "platformMfaMethod" | "platformAuditEvent" | "platformEmailCampaign" | "platformEmailDelivery" | "platformEmailSuppression" | "platformEmailTemplate"
+    modelProps: "platformAdmin" | "platformOrganizationBillingMode" | "platformManagedBilling" | "platformBillingSettings" | "platformRole" | "platformAdminRole" | "platformSession" | "platformMfaMethod" | "platformAuditEvent" | "platformEmailCampaign" | "platformEmailDelivery" | "platformEmailSuppression" | "platformEmailTemplate"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -484,6 +487,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PlatformAdminCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PlatformAdminCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlatformOrganizationBillingMode: {
+      payload: Prisma.$PlatformOrganizationBillingModePayload<ExtArgs>
+      fields: Prisma.PlatformOrganizationBillingModeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlatformOrganizationBillingModeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOrganizationBillingModePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlatformOrganizationBillingModeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOrganizationBillingModePayload>
+        }
+        findFirst: {
+          args: Prisma.PlatformOrganizationBillingModeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOrganizationBillingModePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlatformOrganizationBillingModeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOrganizationBillingModePayload>
+        }
+        findMany: {
+          args: Prisma.PlatformOrganizationBillingModeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOrganizationBillingModePayload>[]
+        }
+        create: {
+          args: Prisma.PlatformOrganizationBillingModeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOrganizationBillingModePayload>
+        }
+        createMany: {
+          args: Prisma.PlatformOrganizationBillingModeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlatformOrganizationBillingModeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOrganizationBillingModePayload>[]
+        }
+        delete: {
+          args: Prisma.PlatformOrganizationBillingModeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOrganizationBillingModePayload>
+        }
+        update: {
+          args: Prisma.PlatformOrganizationBillingModeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOrganizationBillingModePayload>
+        }
+        deleteMany: {
+          args: Prisma.PlatformOrganizationBillingModeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlatformOrganizationBillingModeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlatformOrganizationBillingModeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOrganizationBillingModePayload>[]
+        }
+        upsert: {
+          args: Prisma.PlatformOrganizationBillingModeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformOrganizationBillingModePayload>
+        }
+        aggregate: {
+          args: Prisma.PlatformOrganizationBillingModeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlatformOrganizationBillingMode>
+        }
+        groupBy: {
+          args: Prisma.PlatformOrganizationBillingModeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformOrganizationBillingModeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlatformOrganizationBillingModeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformOrganizationBillingModeCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlatformManagedBilling: {
+      payload: Prisma.$PlatformManagedBillingPayload<ExtArgs>
+      fields: Prisma.PlatformManagedBillingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlatformManagedBillingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformManagedBillingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlatformManagedBillingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformManagedBillingPayload>
+        }
+        findFirst: {
+          args: Prisma.PlatformManagedBillingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformManagedBillingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlatformManagedBillingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformManagedBillingPayload>
+        }
+        findMany: {
+          args: Prisma.PlatformManagedBillingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformManagedBillingPayload>[]
+        }
+        create: {
+          args: Prisma.PlatformManagedBillingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformManagedBillingPayload>
+        }
+        createMany: {
+          args: Prisma.PlatformManagedBillingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlatformManagedBillingCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformManagedBillingPayload>[]
+        }
+        delete: {
+          args: Prisma.PlatformManagedBillingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformManagedBillingPayload>
+        }
+        update: {
+          args: Prisma.PlatformManagedBillingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformManagedBillingPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlatformManagedBillingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlatformManagedBillingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlatformManagedBillingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformManagedBillingPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlatformManagedBillingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformManagedBillingPayload>
+        }
+        aggregate: {
+          args: Prisma.PlatformManagedBillingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlatformManagedBilling>
+        }
+        groupBy: {
+          args: Prisma.PlatformManagedBillingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformManagedBillingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlatformManagedBillingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformManagedBillingCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlatformBillingSettings: {
+      payload: Prisma.$PlatformBillingSettingsPayload<ExtArgs>
+      fields: Prisma.PlatformBillingSettingsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlatformBillingSettingsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformBillingSettingsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlatformBillingSettingsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformBillingSettingsPayload>
+        }
+        findFirst: {
+          args: Prisma.PlatformBillingSettingsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformBillingSettingsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlatformBillingSettingsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformBillingSettingsPayload>
+        }
+        findMany: {
+          args: Prisma.PlatformBillingSettingsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformBillingSettingsPayload>[]
+        }
+        create: {
+          args: Prisma.PlatformBillingSettingsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformBillingSettingsPayload>
+        }
+        createMany: {
+          args: Prisma.PlatformBillingSettingsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlatformBillingSettingsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformBillingSettingsPayload>[]
+        }
+        delete: {
+          args: Prisma.PlatformBillingSettingsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformBillingSettingsPayload>
+        }
+        update: {
+          args: Prisma.PlatformBillingSettingsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformBillingSettingsPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlatformBillingSettingsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlatformBillingSettingsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlatformBillingSettingsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformBillingSettingsPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlatformBillingSettingsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformBillingSettingsPayload>
+        }
+        aggregate: {
+          args: Prisma.PlatformBillingSettingsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlatformBillingSettings>
+        }
+        groupBy: {
+          args: Prisma.PlatformBillingSettingsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformBillingSettingsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlatformBillingSettingsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformBillingSettingsCountAggregateOutputType> | number
         }
       }
     }
@@ -1207,6 +1432,45 @@ export const PlatformAdminScalarFieldEnum = {
 export type PlatformAdminScalarFieldEnum = (typeof PlatformAdminScalarFieldEnum)[keyof typeof PlatformAdminScalarFieldEnum]
 
 
+export const PlatformOrganizationBillingModeScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  mode: 'mode',
+  note: 'note',
+  setById: 'setById',
+  setAt: 'setAt'
+} as const
+
+export type PlatformOrganizationBillingModeScalarFieldEnum = (typeof PlatformOrganizationBillingModeScalarFieldEnum)[keyof typeof PlatformOrganizationBillingModeScalarFieldEnum]
+
+
+export const PlatformManagedBillingScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  planName: 'planName',
+  amountMinor: 'amountMinor',
+  currency: 'currency',
+  interval: 'interval',
+  status: 'status',
+  notes: 'notes',
+  updatedById: 'updatedById',
+  updatedAt: 'updatedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PlatformManagedBillingScalarFieldEnum = (typeof PlatformManagedBillingScalarFieldEnum)[keyof typeof PlatformManagedBillingScalarFieldEnum]
+
+
+export const PlatformBillingSettingsScalarFieldEnum = {
+  id: 'id',
+  defaultMode: 'defaultMode',
+  updatedById: 'updatedById',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlatformBillingSettingsScalarFieldEnum = (typeof PlatformBillingSettingsScalarFieldEnum)[keyof typeof PlatformBillingSettingsScalarFieldEnum]
+
+
 export const PlatformRoleScalarFieldEnum = {
   id: 'id',
   key: 'key',
@@ -1432,6 +1696,34 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'PlatformBillingMode'
+ */
+export type EnumPlatformBillingModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlatformBillingMode'>
+    
+
+
+/**
+ * Reference to a field of type 'PlatformBillingMode[]'
+ */
+export type ListEnumPlatformBillingModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlatformBillingMode[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -1491,20 +1783,6 @@ export type EnumPlatformEmailCampaignStatusFieldRefInput<$PrismaModel> = FieldRe
  * Reference to a field of type 'PlatformEmailCampaignStatus[]'
  */
 export type ListEnumPlatformEmailCampaignStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlatformEmailCampaignStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -1646,6 +1924,9 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   platformAdmin?: Prisma.PlatformAdminOmit
+  platformOrganizationBillingMode?: Prisma.PlatformOrganizationBillingModeOmit
+  platformManagedBilling?: Prisma.PlatformManagedBillingOmit
+  platformBillingSettings?: Prisma.PlatformBillingSettingsOmit
   platformRole?: Prisma.PlatformRoleOmit
   platformAdminRole?: Prisma.PlatformAdminRoleOmit
   platformSession?: Prisma.PlatformSessionOmit

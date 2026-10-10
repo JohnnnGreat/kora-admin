@@ -59,3 +59,11 @@ export const PlatformEmailDeliveryStatus = {
 } as const
 
 export type PlatformEmailDeliveryStatus = (typeof PlatformEmailDeliveryStatus)[keyof typeof PlatformEmailDeliveryStatus]
+
+
+export const PlatformBillingMode = {
+  self: 'self',
+  platform: 'platform'
+} as const
+
+export type PlatformBillingMode = (typeof PlatformBillingMode)[keyof typeof PlatformBillingMode]

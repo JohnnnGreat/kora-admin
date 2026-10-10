@@ -45,6 +45,17 @@ enum PlatformEmailDeliveryStatus {
   skipped
 }
 
+// Who decides an organization's billing: the organization itself (today's
+// only behaviour, via its own tenant-side subscription-billing feature) or
+// the platform, centrally. "self" is the default for every organization
+// that has no PlatformOrganizationBillingMode row at all — this table only
+// ever holds overrides away from the global default
+// (PlatformBillingSettings.defaultMode), never a row for every tenant.
+enum PlatformBillingMode {
+  self
+  platform
+}
+
 model PlatformAdmin {
   id             String              @id @default(uuid())
   email          String              @unique
@@ -61,8 +72,69 @@ model PlatformAdmin {
   mfaMethods  PlatformMfaMethod[]
   auditEvents PlatformAuditEvent[]
   emailCampaigns PlatformEmailCampaign[]
+  billingModeChanges    PlatformOrganizationBillingMode[]
+  managedBillingChanges PlatformManagedBilling[]
+  billingSettingsChanges PlatformBillingSettings[]
 
   @@map("platform_admins")
+}
+
+// One row per organization that has ever been overridden away from the
+// global default (PlatformBillingSettings.defaultMode) — an organization
+// with no row here simply follows the default. organizationId is a tenant
+// id from the tenant database (see TenantDatabaseService), not a local FK:
+// the two databases are separate, same reason EmailDelivery.recipientUserId
+// is a bare string rather than a relation.
+model PlatformOrganizationBillingMode {
+  id             String              @id @default(uuid())
+  organizationId String              @unique
+  mode           PlatformBillingMode
+  note           String?             @db.Text
+  setById        String
+  setAt          DateTime            @default(now())
+
+  setBy PlatformAdmin @relation(fields: [setById], references: [id], onDelete: Restrict)
+
+  @@index([organizationId])
+  @@map("platform_organization_billing_modes")
+}
+
+// The admin-owned billing record for an organization in "platform" mode —
+// a parallel, lightweight record to the tenant's own billing_subscriptions
+// row, never a write into the tenant's database. Only meaningful (and only
+// shown to anyone) while that organization's resolved mode is "platform";
+// switching an org back to "self" leaves this row in place, inert, rather
+// than deleting history.
+model PlatformManagedBilling {
+  id             String   @id @default(uuid())
+  organizationId String   @unique
+  planName       String
+  amountMinor    Int
+  currency       String   @default("NGN")
+  interval       String   @default("monthly")
+  status         String   @default("active")
+  notes          String   @default("") @db.Text
+  updatedById    String
+  updatedAt      DateTime @updatedAt
+  createdAt      DateTime @default(now())
+
+  updatedBy PlatformAdmin @relation(fields: [updatedById], references: [id], onDelete: Restrict)
+
+  @@index([organizationId])
+  @@map("platform_managed_billing")
+}
+
+// Singleton (id is always the literal string "default") — the fallback mode
+// for any organization without its own PlatformOrganizationBillingMode row.
+model PlatformBillingSettings {
+  id          String              @id @default("default")
+  defaultMode PlatformBillingMode @default(self)
+  updatedById String?
+  updatedAt   DateTime            @updatedAt
+
+  updatedBy PlatformAdmin? @relation(fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@map("platform_billing_settings")
 }
 
 model PlatformRole {

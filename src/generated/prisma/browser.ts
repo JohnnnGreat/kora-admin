@@ -23,6 +23,21 @@ export * from './enums.js';
  */
 export type PlatformAdmin = Prisma.PlatformAdminModel
 /**
+ * Model PlatformOrganizationBillingMode
+ * 
+ */
+export type PlatformOrganizationBillingMode = Prisma.PlatformOrganizationBillingModeModel
+/**
+ * Model PlatformManagedBilling
+ * 
+ */
+export type PlatformManagedBilling = Prisma.PlatformManagedBillingModel
+/**
+ * Model PlatformBillingSettings
+ * 
+ */
+export type PlatformBillingSettings = Prisma.PlatformBillingSettingsModel
+/**
  * Model PlatformRole
  * 
  */

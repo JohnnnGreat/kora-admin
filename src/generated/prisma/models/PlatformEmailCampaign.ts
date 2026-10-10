@@ -639,14 +639,6 @@ export type EnumPlatformEmailCampaignStatusFieldUpdateOperationsInput = {
   set?: $Enums.PlatformEmailCampaignStatus
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type PlatformEmailCampaignCreateNestedOneWithoutDeliveriesInput = {
   create?: Prisma.XOR<Prisma.PlatformEmailCampaignCreateWithoutDeliveriesInput, Prisma.PlatformEmailCampaignUncheckedCreateWithoutDeliveriesInput>
   connectOrCreate?: Prisma.PlatformEmailCampaignCreateOrConnectWithoutDeliveriesInput
