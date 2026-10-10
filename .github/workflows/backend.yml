@@ -69,9 +69,16 @@ jobs:
 
       - id: images
         name: Define immutable image tags
+        # ghcr.io (like every Docker registry) requires the whole
+        # repository path to be lowercase — github.repository carries
+        # whatever case the owner/repo actually have (e.g. a personal
+        # account like JohnnnGreat), so IMAGE_NAME can't be used as-is.
+        # `${VAR,,}` is bash's lowercase expansion.
         run: |
-          echo "runtime_image=${IMAGE_NAME}:sha-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
-          echo "migrate_image=${IMAGE_NAME}:migrate-sha-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+          image_name="${IMAGE_NAME,,}"
+          echo "image_name=${image_name}" >> "$GITHUB_OUTPUT"
+          echo "runtime_image=${image_name}:sha-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+          echo "migrate_image=${image_name}:migrate-sha-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
 
       - name: Build and publish API image
         uses: docker/build-push-action@v6
@@ -81,7 +88,7 @@ jobs:
           push: true
           tags: |
             ${{ steps.images.outputs.runtime_image }}
-            ${{ env.IMAGE_NAME }}:latest
+            ${{ steps.images.outputs.image_name }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
