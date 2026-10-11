@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PlatformDatabaseService } from '../database/platform-database.service';
+import { CoreProvisioningService } from '../organizations/core-provisioning.service';
 import { OrganizationsService } from '../organizations/organizations.service';
 import { ListOrganizationsDto } from '../organizations/dto/list-organizations.dto';
 import type {
@@ -21,6 +22,7 @@ export class BillingModeService {
   constructor(
     private readonly database: PlatformDatabaseService,
     private readonly organizations: OrganizationsService,
+    private readonly coreProvisioning: CoreProvisioningService,
   ) {}
 
   async getSettings() {
@@ -200,6 +202,24 @@ export class BillingModeService {
         updatedById: adminId,
       },
     });
-    return this.getOrganization(organizationId);
+    const organization = await this.getOrganization(organizationId);
+    // Only a platform-managed org's own workspace access is driven by this
+    // record — a self-managed one's Tenant.subscriptionStatus stays
+    // Paystack's exclusively, even if a stray managed-billing row exists
+    // here for some other reason. "paused" deliberately isn't synced: it
+    // has no equivalent in SubscriptionStatus, and conflating it with
+    // "cancelled" would block a workspace over a state the admin didn't
+    // actually ask to block it for.
+    if (
+      organization.mode === 'platform' &&
+      (dto.status === 'active' || dto.status === 'cancelled')
+    ) {
+      await this.coreProvisioning.setSubscriptionStatus(
+        organizationId,
+        dto.status,
+        dto.notes,
+      );
+    }
+    return organization;
   }
 }

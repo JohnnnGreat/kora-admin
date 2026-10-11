@@ -51,6 +51,24 @@ export class CoreProvisioningService {
     );
   }
 
+  // Platform-managed billing's on/off switch for the workspace — distinct
+  // from lifecycle()'s operationalStatus actions, which are a harder, total
+  // lockout. See emrc_saas_erc's setSubscriptionStatus() for why.
+  setSubscriptionStatus(
+    id: string,
+    status: 'active' | 'cancelled',
+    reason?: string,
+  ) {
+    return this.request<{
+      id: string;
+      name: string;
+      subscriptionStatus: string;
+    }>(`/platform/provisioning/organizations/${id}/subscription-status`, {
+      method: 'POST',
+      body: JSON.stringify({ status, reason }),
+    });
+  }
+
   forceLogout(userId: string) {
     return this.request<{ userId: string; sessionsRevoked: number }>(
       `/platform/provisioning/users/${userId}/force-logout`,

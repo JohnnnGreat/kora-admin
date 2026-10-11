@@ -8,6 +8,6 @@ import { CoreProvisioningService } from './core-provisioning.service';
   imports: [AuditModule],
   controllers: [OrganizationsController],
   providers: [OrganizationsService, CoreProvisioningService],
-  exports: [OrganizationsService],
+  exports: [OrganizationsService, CoreProvisioningService],
 })
 export class OrganizationsModule {}
