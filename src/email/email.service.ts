@@ -310,12 +310,25 @@ export class EmailService {
     return { retried: result.count };
   }
 
+  private warnedMissingEmailConfig = false;
+
   async processQueue() {
     if (
       !this.config.get<string>('RESEND_API_KEY') ||
       !this.config.get<string>('EMAIL_FROM')
-    )
+    ) {
+      // Logged once rather than every tick (every 10s by default) — still
+      // surfaces in `docker logs` instead of queued campaigns silently
+      // never sending with zero trace anywhere, which is what happened
+      // before this warning existed.
+      if (!this.warnedMissingEmailConfig) {
+        this.warnedMissingEmailConfig = true;
+        this.logger.warn(
+          'processQueue: RESEND_API_KEY or EMAIL_FROM is not set — queued campaigns will never send until both are configured.',
+        );
+      }
       return;
+    }
     const now = new Date();
     await this.database.platformEmailCampaign.updateMany({
       where: { status: 'scheduled', scheduledAt: { lte: now } },

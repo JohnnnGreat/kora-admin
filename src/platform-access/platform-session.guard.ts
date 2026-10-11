@@ -26,14 +26,6 @@ export class PlatformSessionGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<PlatformRequest>();
     const token = request.cookies?.[PLATFORM_SESSION_COOKIE] as
       string | undefined;
-    // eslint-disable-next-line no-console
-    console.log(
-      '[DBG]',
-      request.method,
-      request.url,
-      'cookiesObj=',
-      JSON.stringify(request.cookies),
-    );
     if (!token) throw new UnauthorizedException('Not authenticated.');
 
     const tokenHash = createHash('sha256').update(token).digest('hex');
