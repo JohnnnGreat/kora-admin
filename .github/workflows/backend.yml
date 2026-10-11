@@ -155,4 +155,4 @@ jobs:
              ADMIN_API_IMAGE='${{ needs.publish.outputs.runtime_image }}' \
              ADMIN_API_MIGRATE_IMAGE='${{ needs.publish.outputs.migrate_image }}' \
              docker compose -f docker-compose.yml -f docker-compose.vps.yml -f docker-compose.deploy.yml up -d --remove-orphans admin-api && \
-             curl --fail --retry 10 --retry-delay 3 http://127.0.0.1:3006/api/health/live"
+             curl --fail --retry 10 --retry-delay 3 --retry-connrefused http://127.0.0.1:3006/api/health/live"
