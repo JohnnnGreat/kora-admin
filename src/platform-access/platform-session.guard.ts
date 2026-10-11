@@ -26,14 +26,6 @@ export class PlatformSessionGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<PlatformRequest>();
     const token = request.cookies?.[PLATFORM_SESSION_COOKIE] as
       string | undefined;
-    // eslint-disable-next-line no-console
-    console.log(
-      '[DEBUG session-guard]',
-      request.method,
-      request.url,
-      'hasToken=',
-      !!token,
-    );
     if (!token) throw new UnauthorizedException('Not authenticated.');
 
     const tokenHash = createHash('sha256').update(token).digest('hex');
@@ -66,8 +58,6 @@ export class PlatformSessionGuard implements CanActivate {
       mfaVerified: session.mfaVerified,
     };
 
-    // eslint-disable-next-line no-console
-    console.log('[DEBUG session-guard] principal set for', request.url);
     if (now.getTime() - session.lastSeenAt.getTime() >= 5 * 60 * 1_000) {
       void this.database.platformSession
         .update({ where: { id: session.id }, data: { lastSeenAt: now } })
