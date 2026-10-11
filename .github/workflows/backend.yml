@@ -98,7 +98,12 @@ jobs:
           context: .
           target: migrate
           push: true
-          tags: ${{ steps.images.outputs.migrate_image }}
+          # Also tagged :migrate-latest (the runtime image gets :latest the
+          # same way above) so a manual deploy can `docker pull` a stable
+          # tag instead of having to look up a specific commit SHA.
+          tags: |
+            ${{ steps.images.outputs.migrate_image }}
+            ${{ steps.images.outputs.image_name }}:migrate-latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
