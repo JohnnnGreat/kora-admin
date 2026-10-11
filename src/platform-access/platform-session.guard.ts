@@ -33,8 +33,6 @@ export class PlatformSessionGuard implements CanActivate {
       request.url,
       'cookiesObj=',
       JSON.stringify(request.cookies),
-      'rawCookieHeader=',
-      request.headers.cookie,
     );
     if (!token) throw new UnauthorizedException('Not authenticated.');
 
