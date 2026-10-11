@@ -76,8 +76,13 @@ export class PlatformAuthController {
   private cookieOptions(): CookieOptions {
     return {
       httpOnly: true,
+      // The admin frontend (admin.koraerp.com) and this API
+      // (admin.raven-emrc.com) are different registrable domains, so the
+      // session cookie is cross-site from the browser's point of view.
+      // sameSite: 'none' requires secure: true, which is already the
+      // default — browsers reject a None cookie that isn't Secure.
       secure: this.config.get<boolean>('COOKIE_SECURE', true),
-      sameSite: 'lax',
+      sameSite: 'none',
       path: '/',
     };
   }
