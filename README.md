@@ -88,7 +88,7 @@ uses Linux host networking so the configured `127.0.0.1:5432` database address
 continues to reach the host PostgreSQL service.
 
 ```bash
-# Build the images
+# Build the images locally
 docker compose build
 
 # Apply pending platform-admin migrations explicitly
@@ -102,18 +102,65 @@ curl http://127.0.0.1:3006/api/health/live
 docker compose ps
 ```
 
+CI already builds and publishes both images to GHCR on every push to `main`
+(see below) — for a manual deploy, pulling those instead of rebuilding from
+source is faster and is what the automated deploy job itself does:
+
+```bash
+docker login ghcr.io -u <your-github-username>   # PAT with read:packages, or make the package Public
+
+export ADMIN_API_IMAGE=ghcr.io/<owner>/<repo>:latest
+export ADMIN_API_MIGRATE_IMAGE=ghcr.io/<owner>/<repo>:migrate-latest
+
+docker compose -f docker-compose.yml -f docker-compose.vps.yml -f docker-compose.deploy.yml --profile tools run --rm admin-api-migrate
+docker compose -f docker-compose.yml -f docker-compose.vps.yml -f docker-compose.deploy.yml up -d admin-api
+```
+
 The API container does not publish PostgreSQL and does not contain a PostgreSQL
 service. Place the production admin-frontend origin in `ADMIN_FRONTEND_URL`
 before deployment. Keep port `3006` behind the VPS reverse proxy/firewall rather
 than exposing it directly to the public internet.
+
+### Exposing it on a domain (nginx + TLS)
+
+The container only ever binds to `127.0.0.1:3006` — reaching it from the
+internet needs a reverse proxy in front. Point the domain's DNS A record at
+the VPS first, then:
+
+```nginx
+# /etc/nginx/sites-available/<your-subdomain>
+server {
+    listen 80;
+    server_name <your-subdomain>;
+
+    location / {
+        proxy_pass http://127.0.0.1:3006;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+```bash
+sudo ln -s /etc/nginx/sites-available/<your-subdomain> /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+sudo certbot --nginx -d <your-subdomain>   # rewrites the config for HTTPS and installs the cert
+
+curl https://<your-subdomain>/api/health/live
+```
 
 ## GitHub Actions CI/CD
 
 `.github/workflows/backend.yml` runs formatting, linting, unit tests, Prisma
 generation, the Nest build, and a Docker runtime build on every pull request.
 Pushes to `main` publish immutable runtime and migration images to GitHub
-Container Registry (GHCR). The production deploy job applies migrations, starts
-the image, and verifies the liveness endpoint.
+Container Registry (GHCR) — each as an immutable `sha-<commit>` tag plus a
+floating `:latest` / `:migrate-latest` tag for manual deploys that don't want
+to look up a specific commit. The production deploy job applies migrations,
+starts the image, and verifies the liveness endpoint.
 
 To enable deployment, add these repository secrets:
 
