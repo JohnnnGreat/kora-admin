@@ -7,12 +7,15 @@ import {
   Post,
   Put,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import type { Request } from 'express';
 import type { Prisma } from '../generated/prisma/client';
 import { AuditService } from '../audit/audit.service';
 import { CurrentPlatformPrincipal } from '../platform-access/current-platform-principal.decorator';
 import type { PlatformPrincipal } from '../platform-access/platform-principal';
+import { PlatformPermissionsGuard } from '../platform-access/platform-permissions.guard';
+import { PlatformSessionGuard } from '../platform-access/platform-session.guard';
 import { RequirePlatformPermissions } from '../platform-access/require-platform-permissions.decorator';
 import { BillingModeService } from './billing-mode.service';
 import {
@@ -23,6 +26,7 @@ import {
 } from './dto/billing-mode.dto';
 
 @Controller('billing-mode')
+@UseGuards(PlatformSessionGuard, PlatformPermissionsGuard)
 @RequirePlatformPermissions('platform.configure')
 export class BillingModeController {
   constructor(
