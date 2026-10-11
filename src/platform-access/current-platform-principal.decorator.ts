@@ -7,9 +7,16 @@ import type { PlatformRequest } from './platform-request';
 
 export const CurrentPlatformPrincipal = createParamDecorator(
   (_data: unknown, context: ExecutionContext) => {
-    const principal = context
-      .switchToHttp()
-      .getRequest<PlatformRequest>().platformPrincipal;
+    const request = context.switchToHttp().getRequest<PlatformRequest>();
+    const principal = request.platformPrincipal;
+    // eslint-disable-next-line no-console
+    console.log(
+      '[DEBUG principal-decorator]',
+      request.method,
+      request.url,
+      'hasPrincipal=',
+      !!principal,
+    );
     if (!principal) throw new UnauthorizedException('Not authenticated.');
     return principal;
   },
