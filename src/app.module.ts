@@ -11,7 +11,10 @@ import { EmailModule } from './email/email.module';
 import { HealthModule } from './health/health.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { PlatformAccessModule } from './platform-access/platform-access.module';
+import { PlatformAdminsModule } from './platform-admins/platform-admins.module';
 import { PlatformAuthModule } from './platform-auth/platform-auth.module';
+import { PlatformRolesModule } from './platform-roles/platform-roles.module';
+import { PlatformSystemSettingsModule } from './platform-system-settings/platform-system-settings.module';
 
 @Module({
   imports: [
@@ -26,6 +29,9 @@ import { PlatformAuthModule } from './platform-auth/platform-auth.module';
     HealthModule,
     OrganizationsModule,
     BillingModeModule,
+    PlatformRolesModule,
+    PlatformAdminsModule,
+    PlatformSystemSettingsModule,
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })

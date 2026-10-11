@@ -764,6 +764,42 @@ export class EmailService {
       );
   }
 
+  // A one-off system email (invite, password reset, etc.) — deliberately
+  // bypasses deliver()'s campaign pipeline entirely (no PlatformEmailDelivery
+  // row, no unsubscribe footer, no EditorJS block rendering): those only
+  // make sense for an actual marketing/bulk campaign, and a transactional
+  // email like this is sent directly, synchronously, by the action that
+  // triggered it rather than queued for the worker to pick up.
+  async sendTransactional(to: string, subject: string, html: string) {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${this.config.getOrThrow<string>('RESEND_API_KEY')}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: this.config.getOrThrow<string>('EMAIL_FROM'),
+        to: [to],
+        subject,
+        html,
+      }),
+      signal: AbortSignal.timeout(20_000),
+    });
+    const body = (await response.json().catch(() => null)) as {
+      id?: string;
+      message?: string;
+    } | null;
+    if (!response.ok) {
+      this.logger.error(
+        `sendTransactional to ${to} failed: ${body?.message ?? response.status}`,
+      );
+      throw new BadGatewayException(
+        body?.message || `Email provider failed (${response.status}).`,
+      );
+    }
+    return body?.id ?? null;
+  }
+
   private async deliver(
     recipient: Recipient,
     subject: string,

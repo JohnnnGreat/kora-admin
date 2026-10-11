@@ -388,6 +388,7 @@ export const ModelName = {
   PlatformOrganizationBillingMode: 'PlatformOrganizationBillingMode',
   PlatformManagedBilling: 'PlatformManagedBilling',
   PlatformBillingSettings: 'PlatformBillingSettings',
+  PlatformSystemSettings: 'PlatformSystemSettings',
   PlatformRole: 'PlatformRole',
   PlatformAdminRole: 'PlatformAdminRole',
   PlatformSession: 'PlatformSession',
@@ -412,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "platformAdmin" | "platformOrganizationBillingMode" | "platformManagedBilling" | "platformBillingSettings" | "platformRole" | "platformAdminRole" | "platformSession" | "platformMfaMethod" | "platformAuditEvent" | "platformEmailCampaign" | "platformEmailDelivery" | "platformEmailSuppression" | "platformEmailTemplate"
+    modelProps: "platformAdmin" | "platformOrganizationBillingMode" | "platformManagedBilling" | "platformBillingSettings" | "platformSystemSettings" | "platformRole" | "platformAdminRole" | "platformSession" | "platformMfaMethod" | "platformAuditEvent" | "platformEmailCampaign" | "platformEmailDelivery" | "platformEmailSuppression" | "platformEmailTemplate"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -709,6 +710,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.PlatformBillingSettingsCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PlatformBillingSettingsCountAggregateOutputType> | number
+        }
+      }
+    }
+    PlatformSystemSettings: {
+      payload: Prisma.$PlatformSystemSettingsPayload<ExtArgs>
+      fields: Prisma.PlatformSystemSettingsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlatformSystemSettingsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformSystemSettingsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlatformSystemSettingsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformSystemSettingsPayload>
+        }
+        findFirst: {
+          args: Prisma.PlatformSystemSettingsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformSystemSettingsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlatformSystemSettingsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformSystemSettingsPayload>
+        }
+        findMany: {
+          args: Prisma.PlatformSystemSettingsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformSystemSettingsPayload>[]
+        }
+        create: {
+          args: Prisma.PlatformSystemSettingsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformSystemSettingsPayload>
+        }
+        createMany: {
+          args: Prisma.PlatformSystemSettingsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlatformSystemSettingsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformSystemSettingsPayload>[]
+        }
+        delete: {
+          args: Prisma.PlatformSystemSettingsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformSystemSettingsPayload>
+        }
+        update: {
+          args: Prisma.PlatformSystemSettingsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformSystemSettingsPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlatformSystemSettingsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlatformSystemSettingsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlatformSystemSettingsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformSystemSettingsPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlatformSystemSettingsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlatformSystemSettingsPayload>
+        }
+        aggregate: {
+          args: Prisma.PlatformSystemSettingsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlatformSystemSettings>
+        }
+        groupBy: {
+          args: Prisma.PlatformSystemSettingsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformSystemSettingsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlatformSystemSettingsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlatformSystemSettingsCountAggregateOutputType> | number
         }
       }
     }
@@ -1426,7 +1501,10 @@ export const PlatformAdminScalarFieldEnum = {
   lastLoginAt: 'lastLoginAt',
   passwordSetAt: 'passwordSetAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  inviteTokenHash: 'inviteTokenHash',
+  inviteExpiresAt: 'inviteExpiresAt',
+  invitedById: 'invitedById'
 } as const
 
 export type PlatformAdminScalarFieldEnum = (typeof PlatformAdminScalarFieldEnum)[keyof typeof PlatformAdminScalarFieldEnum]
@@ -1469,6 +1547,21 @@ export const PlatformBillingSettingsScalarFieldEnum = {
 } as const
 
 export type PlatformBillingSettingsScalarFieldEnum = (typeof PlatformBillingSettingsScalarFieldEnum)[keyof typeof PlatformBillingSettingsScalarFieldEnum]
+
+
+export const PlatformSystemSettingsScalarFieldEnum = {
+  id: 'id',
+  multiCurrencyEnabled: 'multiCurrencyEnabled',
+  multiLanguageEnabled: 'multiLanguageEnabled',
+  customBrandingEnabled: 'customBrandingEnabled',
+  whiteLabelEmailEnabled: 'whiteLabelEmailEnabled',
+  ipAllowlistingEnabled: 'ipAllowlistingEnabled',
+  enforceSessionTimeout: 'enforceSessionTimeout',
+  updatedById: 'updatedById',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlatformSystemSettingsScalarFieldEnum = (typeof PlatformSystemSettingsScalarFieldEnum)[keyof typeof PlatformSystemSettingsScalarFieldEnum]
 
 
 export const PlatformRoleScalarFieldEnum = {
@@ -1927,6 +2020,7 @@ export type GlobalOmitConfig = {
   platformOrganizationBillingMode?: Prisma.PlatformOrganizationBillingModeOmit
   platformManagedBilling?: Prisma.PlatformManagedBillingOmit
   platformBillingSettings?: Prisma.PlatformBillingSettingsOmit
+  platformSystemSettings?: Prisma.PlatformSystemSettingsOmit
   platformRole?: Prisma.PlatformRoleOmit
   platformAdminRole?: Prisma.PlatformAdminRoleOmit
   platformSession?: Prisma.PlatformSessionOmit

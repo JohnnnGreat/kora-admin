@@ -9,6 +9,7 @@ datasource db {
 }
 
 enum PlatformAdminStatus {
+  invited
   active
   disabled
 }
@@ -60,12 +61,28 @@ model PlatformAdmin {
   id             String              @id @default(uuid())
   email          String              @unique
   name           String
-  passwordHash   String
-  status         PlatformAdminStatus @default(active)
+  // Null while status is "invited" — set the moment the invite is accepted.
+  // Kept a plain nullable column rather than a separate table since an
+  // invite is 1:1 with the admin row it creates, unlike PlatformSession
+  // (many per admin) or PlatformMfaMethod (also many, and genuinely
+  // optional even once active).
+  passwordHash   String?
+  status         PlatformAdminStatus @default(invited)
   lastLoginAt    DateTime?
-  passwordSetAt  DateTime            @default(now())
+  passwordSetAt  DateTime?
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
+
+  // Hashed the same way as PlatformSession.tokenHash — the raw token only
+  // ever exists in the invite email, never stored. Null once accepted
+  // (cleared alongside setting passwordHash) or if this admin was created
+  // directly (the original bootstrap script still upserts with status
+  // "active" and a real passwordHash, skipping the invite flow entirely).
+  inviteTokenHash String?   @unique
+  inviteExpiresAt DateTime?
+  invitedById     String?
+  invitedBy       PlatformAdmin?  @relation("PlatformAdminInvites", fields: [invitedById], references: [id], onDelete: SetNull)
+  invited         PlatformAdmin[] @relation("PlatformAdminInvites")
 
   roles       PlatformAdminRole[]
   sessions    PlatformSession[]
@@ -75,6 +92,7 @@ model PlatformAdmin {
   billingModeChanges    PlatformOrganizationBillingMode[]
   managedBillingChanges PlatformManagedBilling[]
   billingSettingsChanges PlatformBillingSettings[]
+  systemSettingsChanges PlatformSystemSettings[]
 
   @@map("platform_admins")
 }
@@ -135,6 +153,26 @@ model PlatformBillingSettings {
   updatedBy PlatformAdmin? @relation(fields: [updatedById], references: [id], onDelete: SetNull)
 
   @@map("platform_billing_settings")
+}
+
+// Singleton (id is always the literal string "default") — platform-wide
+// policy defaults every organization inherits, distinct from the tenant
+// side's FeatureModule/TenantModule tables (which gate what's enabled per
+// individual organization, not what's available on the platform at all).
+model PlatformSystemSettings {
+  id                     String   @id @default("default")
+  multiCurrencyEnabled   Boolean  @default(true)
+  multiLanguageEnabled   Boolean  @default(false)
+  customBrandingEnabled  Boolean  @default(true)
+  whiteLabelEmailEnabled Boolean  @default(false)
+  ipAllowlistingEnabled  Boolean  @default(true)
+  enforceSessionTimeout  Boolean  @default(true)
+  updatedById            String?
+  updatedAt              DateTime @updatedAt
+
+  updatedBy PlatformAdmin? @relation(fields: [updatedById], references: [id], onDelete: SetNull)
+
+  @@map("platform_system_settings")
 }
 
 model PlatformRole {

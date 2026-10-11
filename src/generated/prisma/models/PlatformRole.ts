@@ -394,10 +394,6 @@ export type PlatformRoleUpdatepermissionsInput = {
   push?: string | string[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type PlatformRoleCreateNestedOneWithoutAdminsInput = {
   create?: Prisma.XOR<Prisma.PlatformRoleCreateWithoutAdminsInput, Prisma.PlatformRoleUncheckedCreateWithoutAdminsInput>
   connectOrCreate?: Prisma.PlatformRoleCreateOrConnectWithoutAdminsInput

@@ -385,10 +385,6 @@ export type EnumPlatformBillingModeFieldUpdateOperationsInput = {
   set?: $Enums.PlatformBillingMode
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type PlatformOrganizationBillingModeCreateWithoutSetByInput = {
   id?: string
   organizationId: string

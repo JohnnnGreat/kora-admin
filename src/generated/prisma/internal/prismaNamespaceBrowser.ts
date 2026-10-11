@@ -55,6 +55,7 @@ export const ModelName = {
   PlatformOrganizationBillingMode: 'PlatformOrganizationBillingMode',
   PlatformManagedBilling: 'PlatformManagedBilling',
   PlatformBillingSettings: 'PlatformBillingSettings',
+  PlatformSystemSettings: 'PlatformSystemSettings',
   PlatformRole: 'PlatformRole',
   PlatformAdminRole: 'PlatformAdminRole',
   PlatformSession: 'PlatformSession',
@@ -91,7 +92,10 @@ export const PlatformAdminScalarFieldEnum = {
   lastLoginAt: 'lastLoginAt',
   passwordSetAt: 'passwordSetAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  inviteTokenHash: 'inviteTokenHash',
+  inviteExpiresAt: 'inviteExpiresAt',
+  invitedById: 'invitedById'
 } as const
 
 export type PlatformAdminScalarFieldEnum = (typeof PlatformAdminScalarFieldEnum)[keyof typeof PlatformAdminScalarFieldEnum]
@@ -134,6 +138,21 @@ export const PlatformBillingSettingsScalarFieldEnum = {
 } as const
 
 export type PlatformBillingSettingsScalarFieldEnum = (typeof PlatformBillingSettingsScalarFieldEnum)[keyof typeof PlatformBillingSettingsScalarFieldEnum]
+
+
+export const PlatformSystemSettingsScalarFieldEnum = {
+  id: 'id',
+  multiCurrencyEnabled: 'multiCurrencyEnabled',
+  multiLanguageEnabled: 'multiLanguageEnabled',
+  customBrandingEnabled: 'customBrandingEnabled',
+  whiteLabelEmailEnabled: 'whiteLabelEmailEnabled',
+  ipAllowlistingEnabled: 'ipAllowlistingEnabled',
+  enforceSessionTimeout: 'enforceSessionTimeout',
+  updatedById: 'updatedById',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PlatformSystemSettingsScalarFieldEnum = (typeof PlatformSystemSettingsScalarFieldEnum)[keyof typeof PlatformSystemSettingsScalarFieldEnum]
 
 
 export const PlatformRoleScalarFieldEnum = {

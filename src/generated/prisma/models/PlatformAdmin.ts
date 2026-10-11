@@ -34,6 +34,9 @@ export type PlatformAdminMinAggregateOutputType = {
   passwordSetAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  inviteTokenHash: string | null
+  inviteExpiresAt: Date | null
+  invitedById: string | null
 }
 
 export type PlatformAdminMaxAggregateOutputType = {
@@ -46,6 +49,9 @@ export type PlatformAdminMaxAggregateOutputType = {
   passwordSetAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  inviteTokenHash: string | null
+  inviteExpiresAt: Date | null
+  invitedById: string | null
 }
 
 export type PlatformAdminCountAggregateOutputType = {
@@ -58,6 +64,9 @@ export type PlatformAdminCountAggregateOutputType = {
   passwordSetAt: number
   createdAt: number
   updatedAt: number
+  inviteTokenHash: number
+  inviteExpiresAt: number
+  invitedById: number
   _all: number
 }
 
@@ -72,6 +81,9 @@ export type PlatformAdminMinAggregateInputType = {
   passwordSetAt?: true
   createdAt?: true
   updatedAt?: true
+  inviteTokenHash?: true
+  inviteExpiresAt?: true
+  invitedById?: true
 }
 
 export type PlatformAdminMaxAggregateInputType = {
@@ -84,6 +96,9 @@ export type PlatformAdminMaxAggregateInputType = {
   passwordSetAt?: true
   createdAt?: true
   updatedAt?: true
+  inviteTokenHash?: true
+  inviteExpiresAt?: true
+  invitedById?: true
 }
 
 export type PlatformAdminCountAggregateInputType = {
@@ -96,6 +111,9 @@ export type PlatformAdminCountAggregateInputType = {
   passwordSetAt?: true
   createdAt?: true
   updatedAt?: true
+  inviteTokenHash?: true
+  inviteExpiresAt?: true
+  invitedById?: true
   _all?: true
 }
 
@@ -175,12 +193,15 @@ export type PlatformAdminGroupByOutputType = {
   id: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash: string | null
   status: $Enums.PlatformAdminStatus
   lastLoginAt: Date | null
-  passwordSetAt: Date
+  passwordSetAt: Date | null
   createdAt: Date
   updatedAt: Date
+  inviteTokenHash: string | null
+  inviteExpiresAt: Date | null
+  invitedById: string | null
   _count: PlatformAdminCountAggregateOutputType | null
   _min: PlatformAdminMinAggregateOutputType | null
   _max: PlatformAdminMaxAggregateOutputType | null
@@ -208,12 +229,17 @@ export type PlatformAdminWhereInput = {
   id?: Prisma.StringFilter<"PlatformAdmin"> | string
   email?: Prisma.StringFilter<"PlatformAdmin"> | string
   name?: Prisma.StringFilter<"PlatformAdmin"> | string
-  passwordHash?: Prisma.StringFilter<"PlatformAdmin"> | string
+  passwordHash?: Prisma.StringNullableFilter<"PlatformAdmin"> | string | null
   status?: Prisma.EnumPlatformAdminStatusFilter<"PlatformAdmin"> | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.DateTimeNullableFilter<"PlatformAdmin"> | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFilter<"PlatformAdmin"> | Date | string
+  passwordSetAt?: Prisma.DateTimeNullableFilter<"PlatformAdmin"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PlatformAdmin"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlatformAdmin"> | Date | string
+  inviteTokenHash?: Prisma.StringNullableFilter<"PlatformAdmin"> | string | null
+  inviteExpiresAt?: Prisma.DateTimeNullableFilter<"PlatformAdmin"> | Date | string | null
+  invitedById?: Prisma.StringNullableFilter<"PlatformAdmin"> | string | null
+  invitedBy?: Prisma.XOR<Prisma.PlatformAdminNullableScalarRelationFilter, Prisma.PlatformAdminWhereInput> | null
+  invited?: Prisma.PlatformAdminListRelationFilter
   roles?: Prisma.PlatformAdminRoleListRelationFilter
   sessions?: Prisma.PlatformSessionListRelationFilter
   mfaMethods?: Prisma.PlatformMfaMethodListRelationFilter
@@ -222,18 +248,24 @@ export type PlatformAdminWhereInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeListRelationFilter
   managedBillingChanges?: Prisma.PlatformManagedBillingListRelationFilter
   billingSettingsChanges?: Prisma.PlatformBillingSettingsListRelationFilter
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsListRelationFilter
 }
 
 export type PlatformAdminOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  passwordHash?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  passwordSetAt?: Prisma.SortOrder
+  passwordSetAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  inviteTokenHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  inviteExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  invitedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  invitedBy?: Prisma.PlatformAdminOrderByWithRelationInput
+  invited?: Prisma.PlatformAdminOrderByRelationAggregateInput
   roles?: Prisma.PlatformAdminRoleOrderByRelationAggregateInput
   sessions?: Prisma.PlatformSessionOrderByRelationAggregateInput
   mfaMethods?: Prisma.PlatformMfaMethodOrderByRelationAggregateInput
@@ -242,21 +274,27 @@ export type PlatformAdminOrderByWithRelationInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeOrderByRelationAggregateInput
   managedBillingChanges?: Prisma.PlatformManagedBillingOrderByRelationAggregateInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsOrderByRelationAggregateInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsOrderByRelationAggregateInput
 }
 
 export type PlatformAdminWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
+  inviteTokenHash?: string
   AND?: Prisma.PlatformAdminWhereInput | Prisma.PlatformAdminWhereInput[]
   OR?: Prisma.PlatformAdminWhereInput[]
   NOT?: Prisma.PlatformAdminWhereInput | Prisma.PlatformAdminWhereInput[]
   name?: Prisma.StringFilter<"PlatformAdmin"> | string
-  passwordHash?: Prisma.StringFilter<"PlatformAdmin"> | string
+  passwordHash?: Prisma.StringNullableFilter<"PlatformAdmin"> | string | null
   status?: Prisma.EnumPlatformAdminStatusFilter<"PlatformAdmin"> | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.DateTimeNullableFilter<"PlatformAdmin"> | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFilter<"PlatformAdmin"> | Date | string
+  passwordSetAt?: Prisma.DateTimeNullableFilter<"PlatformAdmin"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"PlatformAdmin"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"PlatformAdmin"> | Date | string
+  inviteExpiresAt?: Prisma.DateTimeNullableFilter<"PlatformAdmin"> | Date | string | null
+  invitedById?: Prisma.StringNullableFilter<"PlatformAdmin"> | string | null
+  invitedBy?: Prisma.XOR<Prisma.PlatformAdminNullableScalarRelationFilter, Prisma.PlatformAdminWhereInput> | null
+  invited?: Prisma.PlatformAdminListRelationFilter
   roles?: Prisma.PlatformAdminRoleListRelationFilter
   sessions?: Prisma.PlatformSessionListRelationFilter
   mfaMethods?: Prisma.PlatformMfaMethodListRelationFilter
@@ -265,18 +303,22 @@ export type PlatformAdminWhereUniqueInput = Prisma.AtLeast<{
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeListRelationFilter
   managedBillingChanges?: Prisma.PlatformManagedBillingListRelationFilter
   billingSettingsChanges?: Prisma.PlatformBillingSettingsListRelationFilter
-}, "id" | "email">
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsListRelationFilter
+}, "id" | "email" | "inviteTokenHash">
 
 export type PlatformAdminOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  passwordHash?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  passwordSetAt?: Prisma.SortOrder
+  passwordSetAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  inviteTokenHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  inviteExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  invitedById?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PlatformAdminCountOrderByAggregateInput
   _max?: Prisma.PlatformAdminMaxOrderByAggregateInput
   _min?: Prisma.PlatformAdminMinOrderByAggregateInput
@@ -289,24 +331,31 @@ export type PlatformAdminScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"PlatformAdmin"> | string
   email?: Prisma.StringWithAggregatesFilter<"PlatformAdmin"> | string
   name?: Prisma.StringWithAggregatesFilter<"PlatformAdmin"> | string
-  passwordHash?: Prisma.StringWithAggregatesFilter<"PlatformAdmin"> | string
+  passwordHash?: Prisma.StringNullableWithAggregatesFilter<"PlatformAdmin"> | string | null
   status?: Prisma.EnumPlatformAdminStatusWithAggregatesFilter<"PlatformAdmin"> | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PlatformAdmin"> | Date | string | null
-  passwordSetAt?: Prisma.DateTimeWithAggregatesFilter<"PlatformAdmin"> | Date | string
+  passwordSetAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PlatformAdmin"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PlatformAdmin"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"PlatformAdmin"> | Date | string
+  inviteTokenHash?: Prisma.StringNullableWithAggregatesFilter<"PlatformAdmin"> | string | null
+  inviteExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"PlatformAdmin"> | Date | string | null
+  invitedById?: Prisma.StringNullableWithAggregatesFilter<"PlatformAdmin"> | string | null
 }
 
 export type PlatformAdminCreateInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedBy?: Prisma.PlatformAdminCreateNestedOneWithoutInvitedInput
+  invited?: Prisma.PlatformAdminCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodCreateNestedManyWithoutAdminInput
@@ -315,18 +364,23 @@ export type PlatformAdminCreateInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeCreateNestedManyWithoutSetByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingCreateNestedManyWithoutUpdatedByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminUncheckedCreateInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedById?: string | null
+  invited?: Prisma.PlatformAdminUncheckedCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleUncheckedCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionUncheckedCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedCreateNestedManyWithoutAdminInput
@@ -335,18 +389,23 @@ export type PlatformAdminUncheckedCreateInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedCreateNestedManyWithoutSetByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedCreateNestedManyWithoutUpdatedByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedBy?: Prisma.PlatformAdminUpdateOneWithoutInvitedNestedInput
+  invited?: Prisma.PlatformAdminUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUpdateManyWithoutAdminNestedInput
   sessions?: Prisma.PlatformSessionUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUpdateManyWithoutAdminNestedInput
@@ -355,18 +414,23 @@ export type PlatformAdminUpdateInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUpdateManyWithoutSetByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUpdateManyWithoutUpdatedByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invited?: Prisma.PlatformAdminUncheckedUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUncheckedUpdateManyWithoutAdminNestedInput
   sessions?: Prisma.PlatformSessionUncheckedUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedUpdateManyWithoutAdminNestedInput
@@ -375,42 +439,66 @@ export type PlatformAdminUncheckedUpdateInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedUpdateManyWithoutSetByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedUpdateManyWithoutUpdatedByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminCreateManyInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedById?: string | null
 }
 
 export type PlatformAdminUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type PlatformAdminUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type PlatformAdminNullableScalarRelationFilter = {
+  is?: Prisma.PlatformAdminWhereInput | null
+  isNot?: Prisma.PlatformAdminWhereInput | null
+}
+
+export type PlatformAdminListRelationFilter = {
+  every?: Prisma.PlatformAdminWhereInput
+  some?: Prisma.PlatformAdminWhereInput
+  none?: Prisma.PlatformAdminWhereInput
+}
+
+export type PlatformAdminOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type PlatformAdminCountOrderByAggregateInput = {
@@ -423,6 +511,9 @@ export type PlatformAdminCountOrderByAggregateInput = {
   passwordSetAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  inviteTokenHash?: Prisma.SortOrder
+  inviteExpiresAt?: Prisma.SortOrder
+  invitedById?: Prisma.SortOrder
 }
 
 export type PlatformAdminMaxOrderByAggregateInput = {
@@ -435,6 +526,9 @@ export type PlatformAdminMaxOrderByAggregateInput = {
   passwordSetAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  inviteTokenHash?: Prisma.SortOrder
+  inviteExpiresAt?: Prisma.SortOrder
+  invitedById?: Prisma.SortOrder
 }
 
 export type PlatformAdminMinOrderByAggregateInput = {
@@ -447,6 +541,9 @@ export type PlatformAdminMinOrderByAggregateInput = {
   passwordSetAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  inviteTokenHash?: Prisma.SortOrder
+  inviteExpiresAt?: Prisma.SortOrder
+  invitedById?: Prisma.SortOrder
 }
 
 export type PlatformAdminScalarRelationFilter = {
@@ -454,13 +551,32 @@ export type PlatformAdminScalarRelationFilter = {
   isNot?: Prisma.PlatformAdminWhereInput
 }
 
-export type PlatformAdminNullableScalarRelationFilter = {
-  is?: Prisma.PlatformAdminWhereInput | null
-  isNot?: Prisma.PlatformAdminWhereInput | null
+export type PlatformAdminCreateNestedOneWithoutInvitedInput = {
+  create?: Prisma.XOR<Prisma.PlatformAdminCreateWithoutInvitedInput, Prisma.PlatformAdminUncheckedCreateWithoutInvitedInput>
+  connectOrCreate?: Prisma.PlatformAdminCreateOrConnectWithoutInvitedInput
+  connect?: Prisma.PlatformAdminWhereUniqueInput
+}
+
+export type PlatformAdminCreateNestedManyWithoutInvitedByInput = {
+  create?: Prisma.XOR<Prisma.PlatformAdminCreateWithoutInvitedByInput, Prisma.PlatformAdminUncheckedCreateWithoutInvitedByInput> | Prisma.PlatformAdminCreateWithoutInvitedByInput[] | Prisma.PlatformAdminUncheckedCreateWithoutInvitedByInput[]
+  connectOrCreate?: Prisma.PlatformAdminCreateOrConnectWithoutInvitedByInput | Prisma.PlatformAdminCreateOrConnectWithoutInvitedByInput[]
+  createMany?: Prisma.PlatformAdminCreateManyInvitedByInputEnvelope
+  connect?: Prisma.PlatformAdminWhereUniqueInput | Prisma.PlatformAdminWhereUniqueInput[]
+}
+
+export type PlatformAdminUncheckedCreateNestedManyWithoutInvitedByInput = {
+  create?: Prisma.XOR<Prisma.PlatformAdminCreateWithoutInvitedByInput, Prisma.PlatformAdminUncheckedCreateWithoutInvitedByInput> | Prisma.PlatformAdminCreateWithoutInvitedByInput[] | Prisma.PlatformAdminUncheckedCreateWithoutInvitedByInput[]
+  connectOrCreate?: Prisma.PlatformAdminCreateOrConnectWithoutInvitedByInput | Prisma.PlatformAdminCreateOrConnectWithoutInvitedByInput[]
+  createMany?: Prisma.PlatformAdminCreateManyInvitedByInputEnvelope
+  connect?: Prisma.PlatformAdminWhereUniqueInput | Prisma.PlatformAdminWhereUniqueInput[]
 }
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
 }
 
 export type EnumPlatformAdminStatusFieldUpdateOperationsInput = {
@@ -473,6 +589,44 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type PlatformAdminUpdateOneWithoutInvitedNestedInput = {
+  create?: Prisma.XOR<Prisma.PlatformAdminCreateWithoutInvitedInput, Prisma.PlatformAdminUncheckedCreateWithoutInvitedInput>
+  connectOrCreate?: Prisma.PlatformAdminCreateOrConnectWithoutInvitedInput
+  upsert?: Prisma.PlatformAdminUpsertWithoutInvitedInput
+  disconnect?: Prisma.PlatformAdminWhereInput | boolean
+  delete?: Prisma.PlatformAdminWhereInput | boolean
+  connect?: Prisma.PlatformAdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformAdminUpdateToOneWithWhereWithoutInvitedInput, Prisma.PlatformAdminUpdateWithoutInvitedInput>, Prisma.PlatformAdminUncheckedUpdateWithoutInvitedInput>
+}
+
+export type PlatformAdminUpdateManyWithoutInvitedByNestedInput = {
+  create?: Prisma.XOR<Prisma.PlatformAdminCreateWithoutInvitedByInput, Prisma.PlatformAdminUncheckedCreateWithoutInvitedByInput> | Prisma.PlatformAdminCreateWithoutInvitedByInput[] | Prisma.PlatformAdminUncheckedCreateWithoutInvitedByInput[]
+  connectOrCreate?: Prisma.PlatformAdminCreateOrConnectWithoutInvitedByInput | Prisma.PlatformAdminCreateOrConnectWithoutInvitedByInput[]
+  upsert?: Prisma.PlatformAdminUpsertWithWhereUniqueWithoutInvitedByInput | Prisma.PlatformAdminUpsertWithWhereUniqueWithoutInvitedByInput[]
+  createMany?: Prisma.PlatformAdminCreateManyInvitedByInputEnvelope
+  set?: Prisma.PlatformAdminWhereUniqueInput | Prisma.PlatformAdminWhereUniqueInput[]
+  disconnect?: Prisma.PlatformAdminWhereUniqueInput | Prisma.PlatformAdminWhereUniqueInput[]
+  delete?: Prisma.PlatformAdminWhereUniqueInput | Prisma.PlatformAdminWhereUniqueInput[]
+  connect?: Prisma.PlatformAdminWhereUniqueInput | Prisma.PlatformAdminWhereUniqueInput[]
+  update?: Prisma.PlatformAdminUpdateWithWhereUniqueWithoutInvitedByInput | Prisma.PlatformAdminUpdateWithWhereUniqueWithoutInvitedByInput[]
+  updateMany?: Prisma.PlatformAdminUpdateManyWithWhereWithoutInvitedByInput | Prisma.PlatformAdminUpdateManyWithWhereWithoutInvitedByInput[]
+  deleteMany?: Prisma.PlatformAdminScalarWhereInput | Prisma.PlatformAdminScalarWhereInput[]
+}
+
+export type PlatformAdminUncheckedUpdateManyWithoutInvitedByNestedInput = {
+  create?: Prisma.XOR<Prisma.PlatformAdminCreateWithoutInvitedByInput, Prisma.PlatformAdminUncheckedCreateWithoutInvitedByInput> | Prisma.PlatformAdminCreateWithoutInvitedByInput[] | Prisma.PlatformAdminUncheckedCreateWithoutInvitedByInput[]
+  connectOrCreate?: Prisma.PlatformAdminCreateOrConnectWithoutInvitedByInput | Prisma.PlatformAdminCreateOrConnectWithoutInvitedByInput[]
+  upsert?: Prisma.PlatformAdminUpsertWithWhereUniqueWithoutInvitedByInput | Prisma.PlatformAdminUpsertWithWhereUniqueWithoutInvitedByInput[]
+  createMany?: Prisma.PlatformAdminCreateManyInvitedByInputEnvelope
+  set?: Prisma.PlatformAdminWhereUniqueInput | Prisma.PlatformAdminWhereUniqueInput[]
+  disconnect?: Prisma.PlatformAdminWhereUniqueInput | Prisma.PlatformAdminWhereUniqueInput[]
+  delete?: Prisma.PlatformAdminWhereUniqueInput | Prisma.PlatformAdminWhereUniqueInput[]
+  connect?: Prisma.PlatformAdminWhereUniqueInput | Prisma.PlatformAdminWhereUniqueInput[]
+  update?: Prisma.PlatformAdminUpdateWithWhereUniqueWithoutInvitedByInput | Prisma.PlatformAdminUpdateWithWhereUniqueWithoutInvitedByInput[]
+  updateMany?: Prisma.PlatformAdminUpdateManyWithWhereWithoutInvitedByInput | Prisma.PlatformAdminUpdateManyWithWhereWithoutInvitedByInput[]
+  deleteMany?: Prisma.PlatformAdminScalarWhereInput | Prisma.PlatformAdminScalarWhereInput[]
 }
 
 export type PlatformAdminCreateNestedOneWithoutBillingModeChangesInput = {
@@ -517,6 +671,22 @@ export type PlatformAdminUpdateOneWithoutBillingSettingsChangesNestedInput = {
   delete?: Prisma.PlatformAdminWhereInput | boolean
   connect?: Prisma.PlatformAdminWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformAdminUpdateToOneWithWhereWithoutBillingSettingsChangesInput, Prisma.PlatformAdminUpdateWithoutBillingSettingsChangesInput>, Prisma.PlatformAdminUncheckedUpdateWithoutBillingSettingsChangesInput>
+}
+
+export type PlatformAdminCreateNestedOneWithoutSystemSettingsChangesInput = {
+  create?: Prisma.XOR<Prisma.PlatformAdminCreateWithoutSystemSettingsChangesInput, Prisma.PlatformAdminUncheckedCreateWithoutSystemSettingsChangesInput>
+  connectOrCreate?: Prisma.PlatformAdminCreateOrConnectWithoutSystemSettingsChangesInput
+  connect?: Prisma.PlatformAdminWhereUniqueInput
+}
+
+export type PlatformAdminUpdateOneWithoutSystemSettingsChangesNestedInput = {
+  create?: Prisma.XOR<Prisma.PlatformAdminCreateWithoutSystemSettingsChangesInput, Prisma.PlatformAdminUncheckedCreateWithoutSystemSettingsChangesInput>
+  connectOrCreate?: Prisma.PlatformAdminCreateOrConnectWithoutSystemSettingsChangesInput
+  upsert?: Prisma.PlatformAdminUpsertWithoutSystemSettingsChangesInput
+  disconnect?: Prisma.PlatformAdminWhereInput | boolean
+  delete?: Prisma.PlatformAdminWhereInput | boolean
+  connect?: Prisma.PlatformAdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformAdminUpdateToOneWithWhereWithoutSystemSettingsChangesInput, Prisma.PlatformAdminUpdateWithoutSystemSettingsChangesInput>, Prisma.PlatformAdminUncheckedUpdateWithoutSystemSettingsChangesInput>
 }
 
 export type PlatformAdminCreateNestedOneWithoutRolesInput = {
@@ -591,16 +761,224 @@ export type PlatformAdminUpdateOneRequiredWithoutEmailCampaignsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PlatformAdminUpdateToOneWithWhereWithoutEmailCampaignsInput, Prisma.PlatformAdminUpdateWithoutEmailCampaignsInput>, Prisma.PlatformAdminUncheckedUpdateWithoutEmailCampaignsInput>
 }
 
+export type PlatformAdminCreateWithoutInvitedInput = {
+  id?: string
+  email: string
+  name: string
+  passwordHash?: string | null
+  status?: $Enums.PlatformAdminStatus
+  lastLoginAt?: Date | string | null
+  passwordSetAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedBy?: Prisma.PlatformAdminCreateNestedOneWithoutInvitedInput
+  roles?: Prisma.PlatformAdminRoleCreateNestedManyWithoutAdminInput
+  sessions?: Prisma.PlatformSessionCreateNestedManyWithoutAdminInput
+  mfaMethods?: Prisma.PlatformMfaMethodCreateNestedManyWithoutAdminInput
+  auditEvents?: Prisma.PlatformAuditEventCreateNestedManyWithoutActorInput
+  emailCampaigns?: Prisma.PlatformEmailCampaignCreateNestedManyWithoutCreatedByInput
+  billingModeChanges?: Prisma.PlatformOrganizationBillingModeCreateNestedManyWithoutSetByInput
+  managedBillingChanges?: Prisma.PlatformManagedBillingCreateNestedManyWithoutUpdatedByInput
+  billingSettingsChanges?: Prisma.PlatformBillingSettingsCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsCreateNestedManyWithoutUpdatedByInput
+}
+
+export type PlatformAdminUncheckedCreateWithoutInvitedInput = {
+  id?: string
+  email: string
+  name: string
+  passwordHash?: string | null
+  status?: $Enums.PlatformAdminStatus
+  lastLoginAt?: Date | string | null
+  passwordSetAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedById?: string | null
+  roles?: Prisma.PlatformAdminRoleUncheckedCreateNestedManyWithoutAdminInput
+  sessions?: Prisma.PlatformSessionUncheckedCreateNestedManyWithoutAdminInput
+  mfaMethods?: Prisma.PlatformMfaMethodUncheckedCreateNestedManyWithoutAdminInput
+  auditEvents?: Prisma.PlatformAuditEventUncheckedCreateNestedManyWithoutActorInput
+  emailCampaigns?: Prisma.PlatformEmailCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+  billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedCreateNestedManyWithoutSetByInput
+  managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedCreateNestedManyWithoutUpdatedByInput
+  billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
+}
+
+export type PlatformAdminCreateOrConnectWithoutInvitedInput = {
+  where: Prisma.PlatformAdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlatformAdminCreateWithoutInvitedInput, Prisma.PlatformAdminUncheckedCreateWithoutInvitedInput>
+}
+
+export type PlatformAdminCreateWithoutInvitedByInput = {
+  id?: string
+  email: string
+  name: string
+  passwordHash?: string | null
+  status?: $Enums.PlatformAdminStatus
+  lastLoginAt?: Date | string | null
+  passwordSetAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invited?: Prisma.PlatformAdminCreateNestedManyWithoutInvitedByInput
+  roles?: Prisma.PlatformAdminRoleCreateNestedManyWithoutAdminInput
+  sessions?: Prisma.PlatformSessionCreateNestedManyWithoutAdminInput
+  mfaMethods?: Prisma.PlatformMfaMethodCreateNestedManyWithoutAdminInput
+  auditEvents?: Prisma.PlatformAuditEventCreateNestedManyWithoutActorInput
+  emailCampaigns?: Prisma.PlatformEmailCampaignCreateNestedManyWithoutCreatedByInput
+  billingModeChanges?: Prisma.PlatformOrganizationBillingModeCreateNestedManyWithoutSetByInput
+  managedBillingChanges?: Prisma.PlatformManagedBillingCreateNestedManyWithoutUpdatedByInput
+  billingSettingsChanges?: Prisma.PlatformBillingSettingsCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsCreateNestedManyWithoutUpdatedByInput
+}
+
+export type PlatformAdminUncheckedCreateWithoutInvitedByInput = {
+  id?: string
+  email: string
+  name: string
+  passwordHash?: string | null
+  status?: $Enums.PlatformAdminStatus
+  lastLoginAt?: Date | string | null
+  passwordSetAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invited?: Prisma.PlatformAdminUncheckedCreateNestedManyWithoutInvitedByInput
+  roles?: Prisma.PlatformAdminRoleUncheckedCreateNestedManyWithoutAdminInput
+  sessions?: Prisma.PlatformSessionUncheckedCreateNestedManyWithoutAdminInput
+  mfaMethods?: Prisma.PlatformMfaMethodUncheckedCreateNestedManyWithoutAdminInput
+  auditEvents?: Prisma.PlatformAuditEventUncheckedCreateNestedManyWithoutActorInput
+  emailCampaigns?: Prisma.PlatformEmailCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+  billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedCreateNestedManyWithoutSetByInput
+  managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedCreateNestedManyWithoutUpdatedByInput
+  billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
+}
+
+export type PlatformAdminCreateOrConnectWithoutInvitedByInput = {
+  where: Prisma.PlatformAdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlatformAdminCreateWithoutInvitedByInput, Prisma.PlatformAdminUncheckedCreateWithoutInvitedByInput>
+}
+
+export type PlatformAdminCreateManyInvitedByInputEnvelope = {
+  data: Prisma.PlatformAdminCreateManyInvitedByInput | Prisma.PlatformAdminCreateManyInvitedByInput[]
+  skipDuplicates?: boolean
+}
+
+export type PlatformAdminUpsertWithoutInvitedInput = {
+  update: Prisma.XOR<Prisma.PlatformAdminUpdateWithoutInvitedInput, Prisma.PlatformAdminUncheckedUpdateWithoutInvitedInput>
+  create: Prisma.XOR<Prisma.PlatformAdminCreateWithoutInvitedInput, Prisma.PlatformAdminUncheckedCreateWithoutInvitedInput>
+  where?: Prisma.PlatformAdminWhereInput
+}
+
+export type PlatformAdminUpdateToOneWithWhereWithoutInvitedInput = {
+  where?: Prisma.PlatformAdminWhereInput
+  data: Prisma.XOR<Prisma.PlatformAdminUpdateWithoutInvitedInput, Prisma.PlatformAdminUncheckedUpdateWithoutInvitedInput>
+}
+
+export type PlatformAdminUpdateWithoutInvitedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedBy?: Prisma.PlatformAdminUpdateOneWithoutInvitedNestedInput
+  roles?: Prisma.PlatformAdminRoleUpdateManyWithoutAdminNestedInput
+  sessions?: Prisma.PlatformSessionUpdateManyWithoutAdminNestedInput
+  mfaMethods?: Prisma.PlatformMfaMethodUpdateManyWithoutAdminNestedInput
+  auditEvents?: Prisma.PlatformAuditEventUpdateManyWithoutActorNestedInput
+  emailCampaigns?: Prisma.PlatformEmailCampaignUpdateManyWithoutCreatedByNestedInput
+  billingModeChanges?: Prisma.PlatformOrganizationBillingModeUpdateManyWithoutSetByNestedInput
+  managedBillingChanges?: Prisma.PlatformManagedBillingUpdateManyWithoutUpdatedByNestedInput
+  billingSettingsChanges?: Prisma.PlatformBillingSettingsUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type PlatformAdminUncheckedUpdateWithoutInvitedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  roles?: Prisma.PlatformAdminRoleUncheckedUpdateManyWithoutAdminNestedInput
+  sessions?: Prisma.PlatformSessionUncheckedUpdateManyWithoutAdminNestedInput
+  mfaMethods?: Prisma.PlatformMfaMethodUncheckedUpdateManyWithoutAdminNestedInput
+  auditEvents?: Prisma.PlatformAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  emailCampaigns?: Prisma.PlatformEmailCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+  billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedUpdateManyWithoutSetByNestedInput
+  managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedUpdateManyWithoutUpdatedByNestedInput
+  billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type PlatformAdminUpsertWithWhereUniqueWithoutInvitedByInput = {
+  where: Prisma.PlatformAdminWhereUniqueInput
+  update: Prisma.XOR<Prisma.PlatformAdminUpdateWithoutInvitedByInput, Prisma.PlatformAdminUncheckedUpdateWithoutInvitedByInput>
+  create: Prisma.XOR<Prisma.PlatformAdminCreateWithoutInvitedByInput, Prisma.PlatformAdminUncheckedCreateWithoutInvitedByInput>
+}
+
+export type PlatformAdminUpdateWithWhereUniqueWithoutInvitedByInput = {
+  where: Prisma.PlatformAdminWhereUniqueInput
+  data: Prisma.XOR<Prisma.PlatformAdminUpdateWithoutInvitedByInput, Prisma.PlatformAdminUncheckedUpdateWithoutInvitedByInput>
+}
+
+export type PlatformAdminUpdateManyWithWhereWithoutInvitedByInput = {
+  where: Prisma.PlatformAdminScalarWhereInput
+  data: Prisma.XOR<Prisma.PlatformAdminUpdateManyMutationInput, Prisma.PlatformAdminUncheckedUpdateManyWithoutInvitedByInput>
+}
+
+export type PlatformAdminScalarWhereInput = {
+  AND?: Prisma.PlatformAdminScalarWhereInput | Prisma.PlatformAdminScalarWhereInput[]
+  OR?: Prisma.PlatformAdminScalarWhereInput[]
+  NOT?: Prisma.PlatformAdminScalarWhereInput | Prisma.PlatformAdminScalarWhereInput[]
+  id?: Prisma.StringFilter<"PlatformAdmin"> | string
+  email?: Prisma.StringFilter<"PlatformAdmin"> | string
+  name?: Prisma.StringFilter<"PlatformAdmin"> | string
+  passwordHash?: Prisma.StringNullableFilter<"PlatformAdmin"> | string | null
+  status?: Prisma.EnumPlatformAdminStatusFilter<"PlatformAdmin"> | $Enums.PlatformAdminStatus
+  lastLoginAt?: Prisma.DateTimeNullableFilter<"PlatformAdmin"> | Date | string | null
+  passwordSetAt?: Prisma.DateTimeNullableFilter<"PlatformAdmin"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"PlatformAdmin"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"PlatformAdmin"> | Date | string
+  inviteTokenHash?: Prisma.StringNullableFilter<"PlatformAdmin"> | string | null
+  inviteExpiresAt?: Prisma.DateTimeNullableFilter<"PlatformAdmin"> | Date | string | null
+  invitedById?: Prisma.StringNullableFilter<"PlatformAdmin"> | string | null
+}
+
 export type PlatformAdminCreateWithoutBillingModeChangesInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedBy?: Prisma.PlatformAdminCreateNestedOneWithoutInvitedInput
+  invited?: Prisma.PlatformAdminCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodCreateNestedManyWithoutAdminInput
@@ -608,18 +986,23 @@ export type PlatformAdminCreateWithoutBillingModeChangesInput = {
   emailCampaigns?: Prisma.PlatformEmailCampaignCreateNestedManyWithoutCreatedByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingCreateNestedManyWithoutUpdatedByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminUncheckedCreateWithoutBillingModeChangesInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedById?: string | null
+  invited?: Prisma.PlatformAdminUncheckedCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleUncheckedCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionUncheckedCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedCreateNestedManyWithoutAdminInput
@@ -627,6 +1010,7 @@ export type PlatformAdminUncheckedCreateWithoutBillingModeChangesInput = {
   emailCampaigns?: Prisma.PlatformEmailCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedCreateNestedManyWithoutUpdatedByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminCreateOrConnectWithoutBillingModeChangesInput = {
@@ -649,12 +1033,16 @@ export type PlatformAdminUpdateWithoutBillingModeChangesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedBy?: Prisma.PlatformAdminUpdateOneWithoutInvitedNestedInput
+  invited?: Prisma.PlatformAdminUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUpdateManyWithoutAdminNestedInput
   sessions?: Prisma.PlatformSessionUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUpdateManyWithoutAdminNestedInput
@@ -662,18 +1050,23 @@ export type PlatformAdminUpdateWithoutBillingModeChangesInput = {
   emailCampaigns?: Prisma.PlatformEmailCampaignUpdateManyWithoutCreatedByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUpdateManyWithoutUpdatedByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminUncheckedUpdateWithoutBillingModeChangesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invited?: Prisma.PlatformAdminUncheckedUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUncheckedUpdateManyWithoutAdminNestedInput
   sessions?: Prisma.PlatformSessionUncheckedUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedUpdateManyWithoutAdminNestedInput
@@ -681,18 +1074,23 @@ export type PlatformAdminUncheckedUpdateWithoutBillingModeChangesInput = {
   emailCampaigns?: Prisma.PlatformEmailCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedUpdateManyWithoutUpdatedByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminCreateWithoutManagedBillingChangesInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedBy?: Prisma.PlatformAdminCreateNestedOneWithoutInvitedInput
+  invited?: Prisma.PlatformAdminCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodCreateNestedManyWithoutAdminInput
@@ -700,18 +1098,23 @@ export type PlatformAdminCreateWithoutManagedBillingChangesInput = {
   emailCampaigns?: Prisma.PlatformEmailCampaignCreateNestedManyWithoutCreatedByInput
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeCreateNestedManyWithoutSetByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminUncheckedCreateWithoutManagedBillingChangesInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedById?: string | null
+  invited?: Prisma.PlatformAdminUncheckedCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleUncheckedCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionUncheckedCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedCreateNestedManyWithoutAdminInput
@@ -719,6 +1122,7 @@ export type PlatformAdminUncheckedCreateWithoutManagedBillingChangesInput = {
   emailCampaigns?: Prisma.PlatformEmailCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedCreateNestedManyWithoutSetByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminCreateOrConnectWithoutManagedBillingChangesInput = {
@@ -741,12 +1145,16 @@ export type PlatformAdminUpdateWithoutManagedBillingChangesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedBy?: Prisma.PlatformAdminUpdateOneWithoutInvitedNestedInput
+  invited?: Prisma.PlatformAdminUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUpdateManyWithoutAdminNestedInput
   sessions?: Prisma.PlatformSessionUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUpdateManyWithoutAdminNestedInput
@@ -754,18 +1162,23 @@ export type PlatformAdminUpdateWithoutManagedBillingChangesInput = {
   emailCampaigns?: Prisma.PlatformEmailCampaignUpdateManyWithoutCreatedByNestedInput
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUpdateManyWithoutSetByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminUncheckedUpdateWithoutManagedBillingChangesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invited?: Prisma.PlatformAdminUncheckedUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUncheckedUpdateManyWithoutAdminNestedInput
   sessions?: Prisma.PlatformSessionUncheckedUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedUpdateManyWithoutAdminNestedInput
@@ -773,18 +1186,23 @@ export type PlatformAdminUncheckedUpdateWithoutManagedBillingChangesInput = {
   emailCampaigns?: Prisma.PlatformEmailCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedUpdateManyWithoutSetByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminCreateWithoutBillingSettingsChangesInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedBy?: Prisma.PlatformAdminCreateNestedOneWithoutInvitedInput
+  invited?: Prisma.PlatformAdminCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodCreateNestedManyWithoutAdminInput
@@ -792,18 +1210,23 @@ export type PlatformAdminCreateWithoutBillingSettingsChangesInput = {
   emailCampaigns?: Prisma.PlatformEmailCampaignCreateNestedManyWithoutCreatedByInput
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeCreateNestedManyWithoutSetByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminUncheckedCreateWithoutBillingSettingsChangesInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedById?: string | null
+  invited?: Prisma.PlatformAdminUncheckedCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleUncheckedCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionUncheckedCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedCreateNestedManyWithoutAdminInput
@@ -811,6 +1234,7 @@ export type PlatformAdminUncheckedCreateWithoutBillingSettingsChangesInput = {
   emailCampaigns?: Prisma.PlatformEmailCampaignUncheckedCreateNestedManyWithoutCreatedByInput
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedCreateNestedManyWithoutSetByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminCreateOrConnectWithoutBillingSettingsChangesInput = {
@@ -833,12 +1257,16 @@ export type PlatformAdminUpdateWithoutBillingSettingsChangesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedBy?: Prisma.PlatformAdminUpdateOneWithoutInvitedNestedInput
+  invited?: Prisma.PlatformAdminUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUpdateManyWithoutAdminNestedInput
   sessions?: Prisma.PlatformSessionUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUpdateManyWithoutAdminNestedInput
@@ -846,18 +1274,23 @@ export type PlatformAdminUpdateWithoutBillingSettingsChangesInput = {
   emailCampaigns?: Prisma.PlatformEmailCampaignUpdateManyWithoutCreatedByNestedInput
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUpdateManyWithoutSetByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminUncheckedUpdateWithoutBillingSettingsChangesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invited?: Prisma.PlatformAdminUncheckedUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUncheckedUpdateManyWithoutAdminNestedInput
   sessions?: Prisma.PlatformSessionUncheckedUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedUpdateManyWithoutAdminNestedInput
@@ -865,18 +1298,24 @@ export type PlatformAdminUncheckedUpdateWithoutBillingSettingsChangesInput = {
   emailCampaigns?: Prisma.PlatformEmailCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedUpdateManyWithoutSetByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
-export type PlatformAdminCreateWithoutRolesInput = {
+export type PlatformAdminCreateWithoutSystemSettingsChangesInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedBy?: Prisma.PlatformAdminCreateNestedOneWithoutInvitedInput
+  invited?: Prisma.PlatformAdminCreateNestedManyWithoutInvitedByInput
+  roles?: Prisma.PlatformAdminRoleCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodCreateNestedManyWithoutAdminInput
   auditEvents?: Prisma.PlatformAuditEventCreateNestedManyWithoutActorInput
@@ -886,16 +1325,21 @@ export type PlatformAdminCreateWithoutRolesInput = {
   billingSettingsChanges?: Prisma.PlatformBillingSettingsCreateNestedManyWithoutUpdatedByInput
 }
 
-export type PlatformAdminUncheckedCreateWithoutRolesInput = {
+export type PlatformAdminUncheckedCreateWithoutSystemSettingsChangesInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedById?: string | null
+  invited?: Prisma.PlatformAdminUncheckedCreateNestedManyWithoutInvitedByInput
+  roles?: Prisma.PlatformAdminRoleUncheckedCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionUncheckedCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedCreateNestedManyWithoutAdminInput
   auditEvents?: Prisma.PlatformAuditEventUncheckedCreateNestedManyWithoutActorInput
@@ -903,6 +1347,118 @@ export type PlatformAdminUncheckedCreateWithoutRolesInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedCreateNestedManyWithoutSetByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedCreateNestedManyWithoutUpdatedByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
+}
+
+export type PlatformAdminCreateOrConnectWithoutSystemSettingsChangesInput = {
+  where: Prisma.PlatformAdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlatformAdminCreateWithoutSystemSettingsChangesInput, Prisma.PlatformAdminUncheckedCreateWithoutSystemSettingsChangesInput>
+}
+
+export type PlatformAdminUpsertWithoutSystemSettingsChangesInput = {
+  update: Prisma.XOR<Prisma.PlatformAdminUpdateWithoutSystemSettingsChangesInput, Prisma.PlatformAdminUncheckedUpdateWithoutSystemSettingsChangesInput>
+  create: Prisma.XOR<Prisma.PlatformAdminCreateWithoutSystemSettingsChangesInput, Prisma.PlatformAdminUncheckedCreateWithoutSystemSettingsChangesInput>
+  where?: Prisma.PlatformAdminWhereInput
+}
+
+export type PlatformAdminUpdateToOneWithWhereWithoutSystemSettingsChangesInput = {
+  where?: Prisma.PlatformAdminWhereInput
+  data: Prisma.XOR<Prisma.PlatformAdminUpdateWithoutSystemSettingsChangesInput, Prisma.PlatformAdminUncheckedUpdateWithoutSystemSettingsChangesInput>
+}
+
+export type PlatformAdminUpdateWithoutSystemSettingsChangesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedBy?: Prisma.PlatformAdminUpdateOneWithoutInvitedNestedInput
+  invited?: Prisma.PlatformAdminUpdateManyWithoutInvitedByNestedInput
+  roles?: Prisma.PlatformAdminRoleUpdateManyWithoutAdminNestedInput
+  sessions?: Prisma.PlatformSessionUpdateManyWithoutAdminNestedInput
+  mfaMethods?: Prisma.PlatformMfaMethodUpdateManyWithoutAdminNestedInput
+  auditEvents?: Prisma.PlatformAuditEventUpdateManyWithoutActorNestedInput
+  emailCampaigns?: Prisma.PlatformEmailCampaignUpdateManyWithoutCreatedByNestedInput
+  billingModeChanges?: Prisma.PlatformOrganizationBillingModeUpdateManyWithoutSetByNestedInput
+  managedBillingChanges?: Prisma.PlatformManagedBillingUpdateManyWithoutUpdatedByNestedInput
+  billingSettingsChanges?: Prisma.PlatformBillingSettingsUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type PlatformAdminUncheckedUpdateWithoutSystemSettingsChangesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invited?: Prisma.PlatformAdminUncheckedUpdateManyWithoutInvitedByNestedInput
+  roles?: Prisma.PlatformAdminRoleUncheckedUpdateManyWithoutAdminNestedInput
+  sessions?: Prisma.PlatformSessionUncheckedUpdateManyWithoutAdminNestedInput
+  mfaMethods?: Prisma.PlatformMfaMethodUncheckedUpdateManyWithoutAdminNestedInput
+  auditEvents?: Prisma.PlatformAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  emailCampaigns?: Prisma.PlatformEmailCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+  billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedUpdateManyWithoutSetByNestedInput
+  managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedUpdateManyWithoutUpdatedByNestedInput
+  billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type PlatformAdminCreateWithoutRolesInput = {
+  id?: string
+  email: string
+  name: string
+  passwordHash?: string | null
+  status?: $Enums.PlatformAdminStatus
+  lastLoginAt?: Date | string | null
+  passwordSetAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedBy?: Prisma.PlatformAdminCreateNestedOneWithoutInvitedInput
+  invited?: Prisma.PlatformAdminCreateNestedManyWithoutInvitedByInput
+  sessions?: Prisma.PlatformSessionCreateNestedManyWithoutAdminInput
+  mfaMethods?: Prisma.PlatformMfaMethodCreateNestedManyWithoutAdminInput
+  auditEvents?: Prisma.PlatformAuditEventCreateNestedManyWithoutActorInput
+  emailCampaigns?: Prisma.PlatformEmailCampaignCreateNestedManyWithoutCreatedByInput
+  billingModeChanges?: Prisma.PlatformOrganizationBillingModeCreateNestedManyWithoutSetByInput
+  managedBillingChanges?: Prisma.PlatformManagedBillingCreateNestedManyWithoutUpdatedByInput
+  billingSettingsChanges?: Prisma.PlatformBillingSettingsCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsCreateNestedManyWithoutUpdatedByInput
+}
+
+export type PlatformAdminUncheckedCreateWithoutRolesInput = {
+  id?: string
+  email: string
+  name: string
+  passwordHash?: string | null
+  status?: $Enums.PlatformAdminStatus
+  lastLoginAt?: Date | string | null
+  passwordSetAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedById?: string | null
+  invited?: Prisma.PlatformAdminUncheckedCreateNestedManyWithoutInvitedByInput
+  sessions?: Prisma.PlatformSessionUncheckedCreateNestedManyWithoutAdminInput
+  mfaMethods?: Prisma.PlatformMfaMethodUncheckedCreateNestedManyWithoutAdminInput
+  auditEvents?: Prisma.PlatformAuditEventUncheckedCreateNestedManyWithoutActorInput
+  emailCampaigns?: Prisma.PlatformEmailCampaignUncheckedCreateNestedManyWithoutCreatedByInput
+  billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedCreateNestedManyWithoutSetByInput
+  managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedCreateNestedManyWithoutUpdatedByInput
+  billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminCreateOrConnectWithoutRolesInput = {
@@ -925,12 +1481,16 @@ export type PlatformAdminUpdateWithoutRolesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedBy?: Prisma.PlatformAdminUpdateOneWithoutInvitedNestedInput
+  invited?: Prisma.PlatformAdminUpdateManyWithoutInvitedByNestedInput
   sessions?: Prisma.PlatformSessionUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUpdateManyWithoutAdminNestedInput
   auditEvents?: Prisma.PlatformAuditEventUpdateManyWithoutActorNestedInput
@@ -938,18 +1498,23 @@ export type PlatformAdminUpdateWithoutRolesInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUpdateManyWithoutSetByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUpdateManyWithoutUpdatedByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminUncheckedUpdateWithoutRolesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invited?: Prisma.PlatformAdminUncheckedUpdateManyWithoutInvitedByNestedInput
   sessions?: Prisma.PlatformSessionUncheckedUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedUpdateManyWithoutAdminNestedInput
   auditEvents?: Prisma.PlatformAuditEventUncheckedUpdateManyWithoutActorNestedInput
@@ -957,18 +1522,23 @@ export type PlatformAdminUncheckedUpdateWithoutRolesInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedUpdateManyWithoutSetByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedUpdateManyWithoutUpdatedByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminCreateWithoutSessionsInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedBy?: Prisma.PlatformAdminCreateNestedOneWithoutInvitedInput
+  invited?: Prisma.PlatformAdminCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodCreateNestedManyWithoutAdminInput
   auditEvents?: Prisma.PlatformAuditEventCreateNestedManyWithoutActorInput
@@ -976,18 +1546,23 @@ export type PlatformAdminCreateWithoutSessionsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeCreateNestedManyWithoutSetByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingCreateNestedManyWithoutUpdatedByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminUncheckedCreateWithoutSessionsInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedById?: string | null
+  invited?: Prisma.PlatformAdminUncheckedCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleUncheckedCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedCreateNestedManyWithoutAdminInput
   auditEvents?: Prisma.PlatformAuditEventUncheckedCreateNestedManyWithoutActorInput
@@ -995,6 +1570,7 @@ export type PlatformAdminUncheckedCreateWithoutSessionsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedCreateNestedManyWithoutSetByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedCreateNestedManyWithoutUpdatedByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminCreateOrConnectWithoutSessionsInput = {
@@ -1017,12 +1593,16 @@ export type PlatformAdminUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedBy?: Prisma.PlatformAdminUpdateOneWithoutInvitedNestedInput
+  invited?: Prisma.PlatformAdminUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUpdateManyWithoutAdminNestedInput
   auditEvents?: Prisma.PlatformAuditEventUpdateManyWithoutActorNestedInput
@@ -1030,18 +1610,23 @@ export type PlatformAdminUpdateWithoutSessionsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUpdateManyWithoutSetByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUpdateManyWithoutUpdatedByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminUncheckedUpdateWithoutSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invited?: Prisma.PlatformAdminUncheckedUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUncheckedUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedUpdateManyWithoutAdminNestedInput
   auditEvents?: Prisma.PlatformAuditEventUncheckedUpdateManyWithoutActorNestedInput
@@ -1049,18 +1634,23 @@ export type PlatformAdminUncheckedUpdateWithoutSessionsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedUpdateManyWithoutSetByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedUpdateManyWithoutUpdatedByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminCreateWithoutMfaMethodsInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedBy?: Prisma.PlatformAdminCreateNestedOneWithoutInvitedInput
+  invited?: Prisma.PlatformAdminCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionCreateNestedManyWithoutAdminInput
   auditEvents?: Prisma.PlatformAuditEventCreateNestedManyWithoutActorInput
@@ -1068,18 +1658,23 @@ export type PlatformAdminCreateWithoutMfaMethodsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeCreateNestedManyWithoutSetByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingCreateNestedManyWithoutUpdatedByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminUncheckedCreateWithoutMfaMethodsInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedById?: string | null
+  invited?: Prisma.PlatformAdminUncheckedCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleUncheckedCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionUncheckedCreateNestedManyWithoutAdminInput
   auditEvents?: Prisma.PlatformAuditEventUncheckedCreateNestedManyWithoutActorInput
@@ -1087,6 +1682,7 @@ export type PlatformAdminUncheckedCreateWithoutMfaMethodsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedCreateNestedManyWithoutSetByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedCreateNestedManyWithoutUpdatedByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminCreateOrConnectWithoutMfaMethodsInput = {
@@ -1109,12 +1705,16 @@ export type PlatformAdminUpdateWithoutMfaMethodsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedBy?: Prisma.PlatformAdminUpdateOneWithoutInvitedNestedInput
+  invited?: Prisma.PlatformAdminUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUpdateManyWithoutAdminNestedInput
   sessions?: Prisma.PlatformSessionUpdateManyWithoutAdminNestedInput
   auditEvents?: Prisma.PlatformAuditEventUpdateManyWithoutActorNestedInput
@@ -1122,18 +1722,23 @@ export type PlatformAdminUpdateWithoutMfaMethodsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUpdateManyWithoutSetByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUpdateManyWithoutUpdatedByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminUncheckedUpdateWithoutMfaMethodsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invited?: Prisma.PlatformAdminUncheckedUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUncheckedUpdateManyWithoutAdminNestedInput
   sessions?: Prisma.PlatformSessionUncheckedUpdateManyWithoutAdminNestedInput
   auditEvents?: Prisma.PlatformAuditEventUncheckedUpdateManyWithoutActorNestedInput
@@ -1141,18 +1746,23 @@ export type PlatformAdminUncheckedUpdateWithoutMfaMethodsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedUpdateManyWithoutSetByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedUpdateManyWithoutUpdatedByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminCreateWithoutAuditEventsInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedBy?: Prisma.PlatformAdminCreateNestedOneWithoutInvitedInput
+  invited?: Prisma.PlatformAdminCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodCreateNestedManyWithoutAdminInput
@@ -1160,18 +1770,23 @@ export type PlatformAdminCreateWithoutAuditEventsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeCreateNestedManyWithoutSetByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingCreateNestedManyWithoutUpdatedByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminUncheckedCreateWithoutAuditEventsInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedById?: string | null
+  invited?: Prisma.PlatformAdminUncheckedCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleUncheckedCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionUncheckedCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedCreateNestedManyWithoutAdminInput
@@ -1179,6 +1794,7 @@ export type PlatformAdminUncheckedCreateWithoutAuditEventsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedCreateNestedManyWithoutSetByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedCreateNestedManyWithoutUpdatedByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminCreateOrConnectWithoutAuditEventsInput = {
@@ -1201,12 +1817,16 @@ export type PlatformAdminUpdateWithoutAuditEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedBy?: Prisma.PlatformAdminUpdateOneWithoutInvitedNestedInput
+  invited?: Prisma.PlatformAdminUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUpdateManyWithoutAdminNestedInput
   sessions?: Prisma.PlatformSessionUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUpdateManyWithoutAdminNestedInput
@@ -1214,18 +1834,23 @@ export type PlatformAdminUpdateWithoutAuditEventsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUpdateManyWithoutSetByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUpdateManyWithoutUpdatedByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminUncheckedUpdateWithoutAuditEventsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invited?: Prisma.PlatformAdminUncheckedUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUncheckedUpdateManyWithoutAdminNestedInput
   sessions?: Prisma.PlatformSessionUncheckedUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedUpdateManyWithoutAdminNestedInput
@@ -1233,18 +1858,23 @@ export type PlatformAdminUncheckedUpdateWithoutAuditEventsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedUpdateManyWithoutSetByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedUpdateManyWithoutUpdatedByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminCreateWithoutEmailCampaignsInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedBy?: Prisma.PlatformAdminCreateNestedOneWithoutInvitedInput
+  invited?: Prisma.PlatformAdminCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodCreateNestedManyWithoutAdminInput
@@ -1252,18 +1882,23 @@ export type PlatformAdminCreateWithoutEmailCampaignsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeCreateNestedManyWithoutSetByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingCreateNestedManyWithoutUpdatedByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminUncheckedCreateWithoutEmailCampaignsInput = {
   id?: string
   email: string
   name: string
-  passwordHash: string
+  passwordHash?: string | null
   status?: $Enums.PlatformAdminStatus
   lastLoginAt?: Date | string | null
-  passwordSetAt?: Date | string
+  passwordSetAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+  invitedById?: string | null
+  invited?: Prisma.PlatformAdminUncheckedCreateNestedManyWithoutInvitedByInput
   roles?: Prisma.PlatformAdminRoleUncheckedCreateNestedManyWithoutAdminInput
   sessions?: Prisma.PlatformSessionUncheckedCreateNestedManyWithoutAdminInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedCreateNestedManyWithoutAdminInput
@@ -1271,6 +1906,7 @@ export type PlatformAdminUncheckedCreateWithoutEmailCampaignsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedCreateNestedManyWithoutSetByInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedCreateNestedManyWithoutUpdatedByInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type PlatformAdminCreateOrConnectWithoutEmailCampaignsInput = {
@@ -1293,12 +1929,16 @@ export type PlatformAdminUpdateWithoutEmailCampaignsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedBy?: Prisma.PlatformAdminUpdateOneWithoutInvitedNestedInput
+  invited?: Prisma.PlatformAdminUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUpdateManyWithoutAdminNestedInput
   sessions?: Prisma.PlatformSessionUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUpdateManyWithoutAdminNestedInput
@@ -1306,18 +1946,23 @@ export type PlatformAdminUpdateWithoutEmailCampaignsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUpdateManyWithoutSetByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUpdateManyWithoutUpdatedByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type PlatformAdminUncheckedUpdateWithoutEmailCampaignsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  passwordSetAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invitedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invited?: Prisma.PlatformAdminUncheckedUpdateManyWithoutInvitedByNestedInput
   roles?: Prisma.PlatformAdminRoleUncheckedUpdateManyWithoutAdminNestedInput
   sessions?: Prisma.PlatformSessionUncheckedUpdateManyWithoutAdminNestedInput
   mfaMethods?: Prisma.PlatformMfaMethodUncheckedUpdateManyWithoutAdminNestedInput
@@ -1325,6 +1970,83 @@ export type PlatformAdminUncheckedUpdateWithoutEmailCampaignsInput = {
   billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedUpdateManyWithoutSetByNestedInput
   managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedUpdateManyWithoutUpdatedByNestedInput
   billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type PlatformAdminCreateManyInvitedByInput = {
+  id?: string
+  email: string
+  name: string
+  passwordHash?: string | null
+  status?: $Enums.PlatformAdminStatus
+  lastLoginAt?: Date | string | null
+  passwordSetAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  inviteTokenHash?: string | null
+  inviteExpiresAt?: Date | string | null
+}
+
+export type PlatformAdminUpdateWithoutInvitedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invited?: Prisma.PlatformAdminUpdateManyWithoutInvitedByNestedInput
+  roles?: Prisma.PlatformAdminRoleUpdateManyWithoutAdminNestedInput
+  sessions?: Prisma.PlatformSessionUpdateManyWithoutAdminNestedInput
+  mfaMethods?: Prisma.PlatformMfaMethodUpdateManyWithoutAdminNestedInput
+  auditEvents?: Prisma.PlatformAuditEventUpdateManyWithoutActorNestedInput
+  emailCampaigns?: Prisma.PlatformEmailCampaignUpdateManyWithoutCreatedByNestedInput
+  billingModeChanges?: Prisma.PlatformOrganizationBillingModeUpdateManyWithoutSetByNestedInput
+  managedBillingChanges?: Prisma.PlatformManagedBillingUpdateManyWithoutUpdatedByNestedInput
+  billingSettingsChanges?: Prisma.PlatformBillingSettingsUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type PlatformAdminUncheckedUpdateWithoutInvitedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  invited?: Prisma.PlatformAdminUncheckedUpdateManyWithoutInvitedByNestedInput
+  roles?: Prisma.PlatformAdminRoleUncheckedUpdateManyWithoutAdminNestedInput
+  sessions?: Prisma.PlatformSessionUncheckedUpdateManyWithoutAdminNestedInput
+  mfaMethods?: Prisma.PlatformMfaMethodUncheckedUpdateManyWithoutAdminNestedInput
+  auditEvents?: Prisma.PlatformAuditEventUncheckedUpdateManyWithoutActorNestedInput
+  emailCampaigns?: Prisma.PlatformEmailCampaignUncheckedUpdateManyWithoutCreatedByNestedInput
+  billingModeChanges?: Prisma.PlatformOrganizationBillingModeUncheckedUpdateManyWithoutSetByNestedInput
+  managedBillingChanges?: Prisma.PlatformManagedBillingUncheckedUpdateManyWithoutUpdatedByNestedInput
+  billingSettingsChanges?: Prisma.PlatformBillingSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+  systemSettingsChanges?: Prisma.PlatformSystemSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type PlatformAdminUncheckedUpdateManyWithoutInvitedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumPlatformAdminStatusFieldUpdateOperationsInput | $Enums.PlatformAdminStatus
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordSetAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  inviteTokenHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inviteExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -1333,6 +2055,7 @@ export type PlatformAdminUncheckedUpdateWithoutEmailCampaignsInput = {
  */
 
 export type PlatformAdminCountOutputType = {
+  invited: number
   roles: number
   sessions: number
   mfaMethods: number
@@ -1341,9 +2064,11 @@ export type PlatformAdminCountOutputType = {
   billingModeChanges: number
   managedBillingChanges: number
   billingSettingsChanges: number
+  systemSettingsChanges: number
 }
 
 export type PlatformAdminCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  invited?: boolean | PlatformAdminCountOutputTypeCountInvitedArgs
   roles?: boolean | PlatformAdminCountOutputTypeCountRolesArgs
   sessions?: boolean | PlatformAdminCountOutputTypeCountSessionsArgs
   mfaMethods?: boolean | PlatformAdminCountOutputTypeCountMfaMethodsArgs
@@ -1352,6 +2077,7 @@ export type PlatformAdminCountOutputTypeSelect<ExtArgs extends runtime.Types.Ext
   billingModeChanges?: boolean | PlatformAdminCountOutputTypeCountBillingModeChangesArgs
   managedBillingChanges?: boolean | PlatformAdminCountOutputTypeCountManagedBillingChangesArgs
   billingSettingsChanges?: boolean | PlatformAdminCountOutputTypeCountBillingSettingsChangesArgs
+  systemSettingsChanges?: boolean | PlatformAdminCountOutputTypeCountSystemSettingsChangesArgs
 }
 
 /**
@@ -1362,6 +2088,13 @@ export type PlatformAdminCountOutputTypeDefaultArgs<ExtArgs extends runtime.Type
    * Select specific fields to fetch from the PlatformAdminCountOutputType
    */
   select?: Prisma.PlatformAdminCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PlatformAdminCountOutputType without action
+ */
+export type PlatformAdminCountOutputTypeCountInvitedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlatformAdminWhereInput
 }
 
 /**
@@ -1420,6 +2153,13 @@ export type PlatformAdminCountOutputTypeCountBillingSettingsChangesArgs<ExtArgs 
   where?: Prisma.PlatformBillingSettingsWhereInput
 }
 
+/**
+ * PlatformAdminCountOutputType without action
+ */
+export type PlatformAdminCountOutputTypeCountSystemSettingsChangesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlatformSystemSettingsWhereInput
+}
+
 
 export type PlatformAdminSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1431,6 +2171,11 @@ export type PlatformAdminSelect<ExtArgs extends runtime.Types.Extensions.Interna
   passwordSetAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  inviteTokenHash?: boolean
+  inviteExpiresAt?: boolean
+  invitedById?: boolean
+  invitedBy?: boolean | Prisma.PlatformAdmin$invitedByArgs<ExtArgs>
+  invited?: boolean | Prisma.PlatformAdmin$invitedArgs<ExtArgs>
   roles?: boolean | Prisma.PlatformAdmin$rolesArgs<ExtArgs>
   sessions?: boolean | Prisma.PlatformAdmin$sessionsArgs<ExtArgs>
   mfaMethods?: boolean | Prisma.PlatformAdmin$mfaMethodsArgs<ExtArgs>
@@ -1439,6 +2184,7 @@ export type PlatformAdminSelect<ExtArgs extends runtime.Types.Extensions.Interna
   billingModeChanges?: boolean | Prisma.PlatformAdmin$billingModeChangesArgs<ExtArgs>
   managedBillingChanges?: boolean | Prisma.PlatformAdmin$managedBillingChangesArgs<ExtArgs>
   billingSettingsChanges?: boolean | Prisma.PlatformAdmin$billingSettingsChangesArgs<ExtArgs>
+  systemSettingsChanges?: boolean | Prisma.PlatformAdmin$systemSettingsChangesArgs<ExtArgs>
   _count?: boolean | Prisma.PlatformAdminCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["platformAdmin"]>
 
@@ -1452,6 +2198,10 @@ export type PlatformAdminSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   passwordSetAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  inviteTokenHash?: boolean
+  inviteExpiresAt?: boolean
+  invitedById?: boolean
+  invitedBy?: boolean | Prisma.PlatformAdmin$invitedByArgs<ExtArgs>
 }, ExtArgs["result"]["platformAdmin"]>
 
 export type PlatformAdminSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1464,6 +2214,10 @@ export type PlatformAdminSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   passwordSetAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  inviteTokenHash?: boolean
+  inviteExpiresAt?: boolean
+  invitedById?: boolean
+  invitedBy?: boolean | Prisma.PlatformAdmin$invitedByArgs<ExtArgs>
 }, ExtArgs["result"]["platformAdmin"]>
 
 export type PlatformAdminSelectScalar = {
@@ -1476,10 +2230,15 @@ export type PlatformAdminSelectScalar = {
   passwordSetAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  inviteTokenHash?: boolean
+  inviteExpiresAt?: boolean
+  invitedById?: boolean
 }
 
-export type PlatformAdminOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "passwordHash" | "status" | "lastLoginAt" | "passwordSetAt" | "createdAt" | "updatedAt", ExtArgs["result"]["platformAdmin"]>
+export type PlatformAdminOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "passwordHash" | "status" | "lastLoginAt" | "passwordSetAt" | "createdAt" | "updatedAt" | "inviteTokenHash" | "inviteExpiresAt" | "invitedById", ExtArgs["result"]["platformAdmin"]>
 export type PlatformAdminInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  invitedBy?: boolean | Prisma.PlatformAdmin$invitedByArgs<ExtArgs>
+  invited?: boolean | Prisma.PlatformAdmin$invitedArgs<ExtArgs>
   roles?: boolean | Prisma.PlatformAdmin$rolesArgs<ExtArgs>
   sessions?: boolean | Prisma.PlatformAdmin$sessionsArgs<ExtArgs>
   mfaMethods?: boolean | Prisma.PlatformAdmin$mfaMethodsArgs<ExtArgs>
@@ -1488,14 +2247,21 @@ export type PlatformAdminInclude<ExtArgs extends runtime.Types.Extensions.Intern
   billingModeChanges?: boolean | Prisma.PlatformAdmin$billingModeChangesArgs<ExtArgs>
   managedBillingChanges?: boolean | Prisma.PlatformAdmin$managedBillingChangesArgs<ExtArgs>
   billingSettingsChanges?: boolean | Prisma.PlatformAdmin$billingSettingsChangesArgs<ExtArgs>
+  systemSettingsChanges?: boolean | Prisma.PlatformAdmin$systemSettingsChangesArgs<ExtArgs>
   _count?: boolean | Prisma.PlatformAdminCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type PlatformAdminIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type PlatformAdminIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type PlatformAdminIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  invitedBy?: boolean | Prisma.PlatformAdmin$invitedByArgs<ExtArgs>
+}
+export type PlatformAdminIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  invitedBy?: boolean | Prisma.PlatformAdmin$invitedByArgs<ExtArgs>
+}
 
 export type $PlatformAdminPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PlatformAdmin"
   objects: {
+    invitedBy: Prisma.$PlatformAdminPayload<ExtArgs> | null
+    invited: Prisma.$PlatformAdminPayload<ExtArgs>[]
     roles: Prisma.$PlatformAdminRolePayload<ExtArgs>[]
     sessions: Prisma.$PlatformSessionPayload<ExtArgs>[]
     mfaMethods: Prisma.$PlatformMfaMethodPayload<ExtArgs>[]
@@ -1504,17 +2270,21 @@ export type $PlatformAdminPayload<ExtArgs extends runtime.Types.Extensions.Inter
     billingModeChanges: Prisma.$PlatformOrganizationBillingModePayload<ExtArgs>[]
     managedBillingChanges: Prisma.$PlatformManagedBillingPayload<ExtArgs>[]
     billingSettingsChanges: Prisma.$PlatformBillingSettingsPayload<ExtArgs>[]
+    systemSettingsChanges: Prisma.$PlatformSystemSettingsPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     email: string
     name: string
-    passwordHash: string
+    passwordHash: string | null
     status: $Enums.PlatformAdminStatus
     lastLoginAt: Date | null
-    passwordSetAt: Date
+    passwordSetAt: Date | null
     createdAt: Date
     updatedAt: Date
+    inviteTokenHash: string | null
+    inviteExpiresAt: Date | null
+    invitedById: string | null
   }, ExtArgs["result"]["platformAdmin"]>
   composites: {}
 }
@@ -1909,6 +2679,8 @@ readonly fields: PlatformAdminFieldRefs;
  */
 export interface Prisma__PlatformAdminClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  invitedBy<T extends Prisma.PlatformAdmin$invitedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformAdmin$invitedByArgs<ExtArgs>>): Prisma.Prisma__PlatformAdminClient<runtime.Types.Result.GetResult<Prisma.$PlatformAdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  invited<T extends Prisma.PlatformAdmin$invitedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformAdmin$invitedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformAdminPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   roles<T extends Prisma.PlatformAdmin$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformAdmin$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformAdminRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sessions<T extends Prisma.PlatformAdmin$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformAdmin$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mfaMethods<T extends Prisma.PlatformAdmin$mfaMethodsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformAdmin$mfaMethodsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformMfaMethodPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1917,6 +2689,7 @@ export interface Prisma__PlatformAdminClient<T, Null = never, ExtArgs extends ru
   billingModeChanges<T extends Prisma.PlatformAdmin$billingModeChangesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformAdmin$billingModeChangesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformOrganizationBillingModePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   managedBillingChanges<T extends Prisma.PlatformAdmin$managedBillingChangesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformAdmin$managedBillingChangesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformManagedBillingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   billingSettingsChanges<T extends Prisma.PlatformAdmin$billingSettingsChangesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformAdmin$billingSettingsChangesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformBillingSettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  systemSettingsChanges<T extends Prisma.PlatformAdmin$systemSettingsChangesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlatformAdmin$systemSettingsChangesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlatformSystemSettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1955,6 +2728,9 @@ export interface PlatformAdminFieldRefs {
   readonly passwordSetAt: Prisma.FieldRef<"PlatformAdmin", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"PlatformAdmin", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"PlatformAdmin", 'DateTime'>
+  readonly inviteTokenHash: Prisma.FieldRef<"PlatformAdmin", 'String'>
+  readonly inviteExpiresAt: Prisma.FieldRef<"PlatformAdmin", 'DateTime'>
+  readonly invitedById: Prisma.FieldRef<"PlatformAdmin", 'String'>
 }
     
 
@@ -2209,6 +2985,10 @@ export type PlatformAdminCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    */
   data: Prisma.PlatformAdminCreateManyInput | Prisma.PlatformAdminCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlatformAdminIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2279,6 +3059,10 @@ export type PlatformAdminUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * Limit how many PlatformAdmins to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlatformAdminIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2345,6 +3129,49 @@ export type PlatformAdminDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many PlatformAdmins to delete.
    */
   limit?: number
+}
+
+/**
+ * PlatformAdmin.invitedBy
+ */
+export type PlatformAdmin$invitedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlatformAdmin
+   */
+  select?: Prisma.PlatformAdminSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlatformAdmin
+   */
+  omit?: Prisma.PlatformAdminOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlatformAdminInclude<ExtArgs> | null
+  where?: Prisma.PlatformAdminWhereInput
+}
+
+/**
+ * PlatformAdmin.invited
+ */
+export type PlatformAdmin$invitedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlatformAdmin
+   */
+  select?: Prisma.PlatformAdminSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlatformAdmin
+   */
+  omit?: Prisma.PlatformAdminOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlatformAdminInclude<ExtArgs> | null
+  where?: Prisma.PlatformAdminWhereInput
+  orderBy?: Prisma.PlatformAdminOrderByWithRelationInput | Prisma.PlatformAdminOrderByWithRelationInput[]
+  cursor?: Prisma.PlatformAdminWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlatformAdminScalarFieldEnum | Prisma.PlatformAdminScalarFieldEnum[]
 }
 
 /**
@@ -2537,6 +3364,30 @@ export type PlatformAdmin$billingSettingsChangesArgs<ExtArgs extends runtime.Typ
   take?: number
   skip?: number
   distinct?: Prisma.PlatformBillingSettingsScalarFieldEnum | Prisma.PlatformBillingSettingsScalarFieldEnum[]
+}
+
+/**
+ * PlatformAdmin.systemSettingsChanges
+ */
+export type PlatformAdmin$systemSettingsChangesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlatformSystemSettings
+   */
+  select?: Prisma.PlatformSystemSettingsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlatformSystemSettings
+   */
+  omit?: Prisma.PlatformSystemSettingsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlatformSystemSettingsInclude<ExtArgs> | null
+  where?: Prisma.PlatformSystemSettingsWhereInput
+  orderBy?: Prisma.PlatformSystemSettingsOrderByWithRelationInput | Prisma.PlatformSystemSettingsOrderByWithRelationInput[]
+  cursor?: Prisma.PlatformSystemSettingsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlatformSystemSettingsScalarFieldEnum | Prisma.PlatformSystemSettingsScalarFieldEnum[]
 }
 
 /**

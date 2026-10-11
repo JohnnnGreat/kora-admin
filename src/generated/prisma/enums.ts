@@ -10,6 +10,7 @@
 */
 
 export const PlatformAdminStatus = {
+  invited: 'invited',
   active: 'active',
   disabled: 'disabled'
 } as const

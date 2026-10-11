@@ -60,6 +60,11 @@ export type PlatformManagedBilling = Prisma.PlatformManagedBillingModel
  */
 export type PlatformBillingSettings = Prisma.PlatformBillingSettingsModel
 /**
+ * Model PlatformSystemSettings
+ * 
+ */
+export type PlatformSystemSettings = Prisma.PlatformSystemSettingsModel
+/**
  * Model PlatformRole
  * 
  */

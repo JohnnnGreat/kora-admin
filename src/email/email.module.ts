@@ -8,5 +8,6 @@ import { EmailWorker } from './email.worker';
   imports: [AuditModule],
   controllers: [EmailController, EmailEventsController],
   providers: [EmailService, EmailWorker],
+  exports: [EmailService],
 })
 export class EmailModule {}
