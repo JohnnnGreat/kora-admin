@@ -48,6 +48,9 @@ jobs:
   publish:
     name: Publish images
     needs: verify
+    # Deliberately push-only: a manual `workflow_dispatch` run (e.g. from
+    # `gh workflow run`) only exercises `verify` and skips publish/deploy,
+    # since github.event_name is "workflow_dispatch" there, not "push".
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
