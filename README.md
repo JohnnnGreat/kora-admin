@@ -3,7 +3,7 @@
 Independent NestJS backend for the Kora platform-admin application located at
 `emrc-hr/apps/admin`.
 
-This service is intentionally separate from the tenant-facing
+This service is intentionally separate from the tenant-facingd
 `emrc_saas_erc` API. Platform-administration authentication, authorization,
 data access, and deployment concerns can therefore be isolated as the admin
 backend grows.
