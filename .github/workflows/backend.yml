@@ -152,6 +152,7 @@ jobs:
              ADMIN_API_IMAGE='${{ needs.publish.outputs.runtime_image }}' \
              ADMIN_API_MIGRATE_IMAGE='${{ needs.publish.outputs.migrate_image }}' \
              docker compose -f docker-compose.yml -f docker-compose.vps.yml -f docker-compose.deploy.yml --profile tools run --rm admin-api-migrate && \
+             GIT_SHA='${{ github.sha }}' \
              ADMIN_API_IMAGE='${{ needs.publish.outputs.runtime_image }}' \
              ADMIN_API_MIGRATE_IMAGE='${{ needs.publish.outputs.migrate_image }}' \
              docker compose -f docker-compose.yml -f docker-compose.vps.yml -f docker-compose.deploy.yml up -d --remove-orphans admin-api && \

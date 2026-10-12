@@ -9,6 +9,7 @@ import { DatabaseModule } from './database/database.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { EmailModule } from './email/email.module';
 import { HealthModule } from './health/health.module';
+import { OperationsModule } from './operations/operations.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { PlatformAccessModule } from './platform-access/platform-access.module';
 import { PlatformAdminsModule } from './platform-admins/platform-admins.module';
@@ -29,6 +30,7 @@ import { PlatformSystemSettingsModule } from './platform-system-settings/platfor
     HealthModule,
     OrganizationsModule,
     BillingModeModule,
+    OperationsModule,
     PlatformRolesModule,
     PlatformAdminsModule,
     PlatformSystemSettingsModule,

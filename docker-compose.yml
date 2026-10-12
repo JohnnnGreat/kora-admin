@@ -9,6 +9,8 @@ services:
       - .env
     environment:
       DATABASE_URL: ${DOCKER_DATABASE_URL}
+      # Which commit this container was built from, shown on the Releases page.
+      GIT_SHA: ${GIT_SHA:-}
     ports:
       - "127.0.0.1:3006:3006"
     extra_hosts:
