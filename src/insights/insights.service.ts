@@ -47,16 +47,16 @@ export class InsightsService {
           eligibleOrganizations: string;
         }
       >(`
-        WITH months AS (
-          SELECT generate_series(date_trunc('month', CURRENT_DATE) - INTERVAL '7 months', date_trunc('month', CURRENT_DATE), INTERVAL '1 month') month
+        WITH months(month_start) AS (
+          SELECT generate_series(date_trunc('month', CURRENT_DATE) - INTERVAL '7 months', date_trunc('month', CURRENT_DATE), INTERVAL '1 month')
         )
-        SELECT m.month,
+        SELECT m.month_start AS month,
           COUNT(DISTINCT a."tenantId")::text AS "activeOrganizations",
           COUNT(DISTINCT t.id)::text AS "eligibleOrganizations"
         FROM months m
-        LEFT JOIN tenants t ON t."createdAt" < m.month + INTERVAL '1 month' AND t."deletedAt" IS NULL
-        LEFT JOIN audit_logs a ON a."tenantId" = t.id AND a."createdAt" >= m.month AND a."createdAt" < m.month + INTERVAL '1 month'
-        GROUP BY m.month ORDER BY m.month
+        LEFT JOIN tenants t ON t."createdAt" < m.month_start + INTERVAL '1 month' AND t."deletedAt" IS NULL
+        LEFT JOIN audit_logs a ON a."tenantId" = t.id AND a."createdAt" >= m.month_start AND a."createdAt" < m.month_start + INTERVAL '1 month'
+        GROUP BY m.month_start ORDER BY m.month_start
       `),
     ]);
     const row = summary.rows[0] ?? {};
@@ -110,12 +110,12 @@ export class InsightsService {
       this.database.read<
         QueryResultRow & { month: Date; currency: string; revenueMinor: string }
       >(`
-        WITH months AS (SELECT generate_series(date_trunc('month', CURRENT_DATE) - INTERVAL '11 months', date_trunc('month', CURRENT_DATE), INTERVAL '1 month') month),
+        WITH months(month_start) AS (SELECT generate_series(date_trunc('month', CURRENT_DATE) - INTERVAL '11 months', date_trunc('month', CURRENT_DATE), INTERVAL '1 month')),
         currencies AS (SELECT DISTINCT currency::text currency FROM payment_transactions)
-        SELECT m.month, c.currency, COALESCE(SUM(pt."amountMinor"), 0)::text AS "revenueMinor"
+        SELECT m.month_start AS month, c.currency, COALESCE(SUM(pt."amountMinor"), 0)::text AS "revenueMinor"
         FROM months m CROSS JOIN currencies c
-        LEFT JOIN payment_transactions pt ON pt.currency::text = c.currency AND pt.status::text = 'succeeded' AND pt."paidAt" >= m.month AND pt."paidAt" < m.month + INTERVAL '1 month'
-        GROUP BY m.month, c.currency ORDER BY m.month, c.currency
+        LEFT JOIN payment_transactions pt ON pt.currency::text = c.currency AND pt.status::text = 'succeeded' AND pt."paidAt" >= m.month_start AND pt."paidAt" < m.month_start + INTERVAL '1 month'
+        GROUP BY m.month_start, c.currency ORDER BY m.month_start, c.currency
       `),
       this.database.read<
         QueryResultRow & {
@@ -200,10 +200,10 @@ export class InsightsService {
       this.database.read<
         QueryResultRow & { month: Date; actions: string; activeUsers: string }
       >(`
-        WITH months AS (SELECT generate_series(date_trunc('month', CURRENT_DATE) - INTERVAL '9 months', date_trunc('month', CURRENT_DATE), INTERVAL '1 month') month)
-        SELECT m.month, COUNT(a.id)::text actions, COUNT(DISTINCT a."userId")::text AS "activeUsers"
-        FROM months m LEFT JOIN audit_logs a ON a."createdAt" >= m.month AND a."createdAt" < m.month + INTERVAL '1 month'
-        GROUP BY m.month ORDER BY m.month
+        WITH months(month_start) AS (SELECT generate_series(date_trunc('month', CURRENT_DATE) - INTERVAL '9 months', date_trunc('month', CURRENT_DATE), INTERVAL '1 month'))
+        SELECT m.month_start AS month, COUNT(a.id)::text actions, COUNT(DISTINCT a."userId")::text AS "activeUsers"
+        FROM months m LEFT JOIN audit_logs a ON a."createdAt" >= m.month_start AND a."createdAt" < m.month_start + INTERVAL '1 month'
+        GROUP BY m.month_start ORDER BY m.month_start
       `),
       this.database.read<
         QueryResultRow & { country: string; organizations: string }
