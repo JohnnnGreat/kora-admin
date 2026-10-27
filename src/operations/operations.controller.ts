@@ -16,7 +16,7 @@ import type { PlatformPrincipal } from '../platform-access/platform-principal';
 import { PlatformPermissionsGuard } from '../platform-access/platform-permissions.guard';
 import { PlatformSessionGuard } from '../platform-access/platform-session.guard';
 import { RequirePlatformPermissions } from '../platform-access/require-platform-permissions.decorator';
-import { RequestBackupDto } from './dto/operations.dto';
+import { RequestBackupDto, ResolveErrorDto } from './dto/operations.dto';
 import { OperationsService } from './operations.service';
 
 // The Operations pages: Monitoring, Queues, Storage, Backups and Releases.
@@ -112,6 +112,42 @@ export class OperationsController {
         reason: dto.reason ?? null,
       },
     );
+    return result;
+  }
+
+  @Get('errors')
+  errors(@Query() query: Record<string, string | undefined>) {
+    return this.operations.errors(query);
+  }
+
+  @Post('errors/:id/resolve')
+  @RequirePlatformPermissions('operations.read', 'operations.manage')
+  async resolveError(
+    @Param('id') id: string,
+    @Body() dto: ResolveErrorDto,
+    @CurrentPlatformPrincipal() principal: PlatformPrincipal,
+    @Req() request: Request,
+  ) {
+    const result = await this.operations.resolveError(
+      id,
+      `${principal.name} <${principal.email}>`,
+      dto.note,
+    );
+    await this.record(principal, request, 'operations.error_resolved', id, {
+      note: dto.note ?? null,
+    });
+    return result;
+  }
+
+  @Post('errors/:id/unresolve')
+  @RequirePlatformPermissions('operations.read', 'operations.manage')
+  async unresolveError(
+    @Param('id') id: string,
+    @CurrentPlatformPrincipal() principal: PlatformPrincipal,
+    @Req() request: Request,
+  ) {
+    const result = await this.operations.unresolveError(id);
+    await this.record(principal, request, 'operations.error_unresolved', id);
     return result;
   }
 

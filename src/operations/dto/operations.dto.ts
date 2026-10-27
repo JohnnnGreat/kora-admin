@@ -6,3 +6,10 @@ export class RequestBackupDto {
   @MaxLength(500)
   reason?: string;
 }
+
+export class ResolveErrorDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(1000)
+  note?: string;
+}

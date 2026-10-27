@@ -189,4 +189,29 @@ export class OperationsService {
       { requestedBy, reason },
     );
   }
+
+  errors(query: Record<string, string | undefined>) {
+    const params = new URLSearchParams(
+      Object.entries(query).filter(([, value]) => value !== undefined) as [
+        string,
+        string,
+      ][],
+    ).toString();
+    return this.core.get(
+      `/platform/operations/errors${params ? `?${params}` : ''}`,
+    );
+  }
+
+  resolveError(id: string, resolvedBy: string, note?: string) {
+    return this.core.post(
+      `/platform/operations/errors/${encodeURIComponent(id)}/resolve`,
+      { resolvedBy, note },
+    );
+  }
+
+  unresolveError(id: string) {
+    return this.core.post(
+      `/platform/operations/errors/${encodeURIComponent(id)}/unresolve`,
+    );
+  }
 }
